@@ -93,6 +93,7 @@ public class Controller {
 
 
 
+
     @FXML
     void add(ActionEvent event) {
 
@@ -104,6 +105,7 @@ public class Controller {
 
         name = nameFieldID.getText();
         dateHiredStr = dateHired.toString(); //formatted in yyyy-mm-dd
+
 
 
         if (fullTimeRadioID.isSelected()) {
@@ -217,7 +219,6 @@ public class Controller {
 
     @FXML
     void clear(ActionEvent event) {
-
         managementRadioID.setDisable(false);
 
     }
@@ -252,6 +253,7 @@ public class Controller {
 
 
 
+
     }
 
     @FXML
@@ -261,16 +263,21 @@ public class Controller {
 
     @FXML
     void setManager(MouseEvent event) {
+
         role = 1;
+
     }
 
     @FXML
     void setDepartmentHead(MouseEvent event) {
+
+
         role = 2;
     }
 
     @FXML
     void setDirector(MouseEvent event) {
+
         role = 3;
     }
 
@@ -279,15 +286,19 @@ public class Controller {
 
     }
 
+
     @FXML
     void setFullTime(MouseEvent event) {
 
         hrsWorkedID.setDisable(true);
         rateFieldID.setDisable(true);
         setHoursButton.setDisable(true);
+        managementRadioID.setDisable(false);
+
+        directorRadioID.setDisable(true);
         deptHeadRadioID.setDisable(true);
         managerRadioID.setDisable(true);
-        directorRadioID.setDisable(true);
+        salaryFieldID.setDisable(false);
 
     }
 
@@ -298,10 +309,16 @@ public class Controller {
 
     @FXML
     void setManagement(MouseEvent event) {
+        
 
         rateFieldID.setDisable(true);
         hrsWorkedID.setDisable(true);
         setHoursButton.setDisable(true);
+        managementRadioID.setDisable(false);
+        managerRadioID.setDisable(false);
+        directorRadioID.setDisable(false);
+        deptHeadRadioID.setDisable(false);
+        salaryFieldID.setDisable(false);
 
     }
 
@@ -310,7 +327,10 @@ public class Controller {
     @FXML
     void setPartTime(MouseEvent event) {
 
-        managementRadioID.setDisable(true);
+        rateFieldID.setDisable(false);
+        hrsWorkedID.setDisable(false);
+        setHoursButton.setDisable(false);
+        managementRadioID.setDisable(false);
         managerRadioID.setDisable(true);
         directorRadioID.setDisable(true);
         deptHeadRadioID.setDisable(true);

@@ -44,6 +44,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -89,7 +90,7 @@
                               <Insets left="20.0" />
                            </GridPane.margin>
                         </Label>
-                        <DatePicker fx:id="DateHiredID" onMouseClicked="#setDate" GridPane.halignment="LEFT" GridPane.rowIndex="3">
+                        <DatePicker fx:id="DateHiredID" editable="false" onMouseClicked="#setDate" GridPane.halignment="LEFT" GridPane.rowIndex="3">
                            <GridPane.margin>
                               <Insets left="80.0" />
                            </GridPane.margin>
@@ -98,18 +99,21 @@
                            <padding>
                               <Insets left="5.0" />
                            </padding>
+                           <toggleGroup>
+                              <ToggleGroup fx:id="EmpType" />
+                           </toggleGroup>
                         </RadioButton>
-                        <RadioButton fx:id="managementRadioID" layoutX="110.0" layoutY="143.0" mnemonicParsing="false" onMouseClicked="#setManagement" text="Management" GridPane.rowIndex="4">
+                        <RadioButton fx:id="managementRadioID" layoutX="110.0" layoutY="143.0" mnemonicParsing="false" onMouseClicked="#setManagement" text="Management" toggleGroup="$EmpType" GridPane.rowIndex="4">
                            <GridPane.margin>
                               <Insets left="200.0" />
                            </GridPane.margin>
                         </RadioButton>
-                        <RadioButton fx:id="partTimeRadioID" layoutX="210.0" layoutY="143.0" mnemonicParsing="false" onMouseClicked="#setPartTime" text="Part Time" GridPane.rowIndex="4">
+                        <RadioButton fx:id="partTimeRadioID" layoutX="210.0" layoutY="143.0" mnemonicParsing="false" onMouseClicked="#setPartTime" text="Part Time" toggleGroup="$EmpType" GridPane.rowIndex="4">
                            <GridPane.margin>
                               <Insets left="100.0" />
                            </GridPane.margin>
                         </RadioButton>
-                        <TextField fx:id="salaryFieldID" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="23.0" prefWidth="100.0" GridPane.halignment="LEFT" GridPane.rowIndex="5">
+                        <TextField fx:id="salaryFieldID" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="21.0" prefWidth="83.0" GridPane.halignment="LEFT" GridPane.rowIndex="5">
                            <padding>
                               <Insets left="90.0" top="10.0" />
                            </padding>
@@ -144,13 +148,16 @@
                            <padding>
                               <Insets left="5.0" />
                            </padding>
+                           <toggleGroup>
+                              <ToggleGroup fx:id="DeptType" />
+                           </toggleGroup>
                         </RadioButton>
-                        <RadioButton fx:id="ECERadioID" mnemonicParsing="false" onMouseClicked="#setECE" text="ECE" GridPane.rowIndex="2">
+                        <RadioButton fx:id="ECERadioID" mnemonicParsing="false" onMouseClicked="#setECE" text="ECE" toggleGroup="$DeptType" GridPane.rowIndex="2">
                            <GridPane.margin>
                               <Insets left="200.0" />
                            </GridPane.margin>
                         </RadioButton>
-                        <RadioButton fx:id="ITRadioID" mnemonicParsing="false" onMouseClicked="#setIT" text="IT" GridPane.rowIndex="2">
+                        <RadioButton fx:id="ITRadioID" mnemonicParsing="false" onMouseClicked="#setIT" text="IT" toggleGroup="$DeptType" GridPane.rowIndex="2">
                            <GridPane.margin>
                               <Insets left="100.0" />
                            </GridPane.margin>
@@ -179,13 +186,16 @@
                            <padding>
                               <Insets left="5.0" />
                            </padding>
+                           <toggleGroup>
+                              <ToggleGroup fx:id="ManagerType" />
+                           </toggleGroup>
                         </RadioButton>
-                        <RadioButton fx:id="deptHeadRadioID" mnemonicParsing="false" onMouseClicked="#setDepartmentHead" text="Department Head" GridPane.rowIndex="7">
+                        <RadioButton fx:id="deptHeadRadioID" mnemonicParsing="false" onMouseClicked="#setDepartmentHead" text="Department Head" toggleGroup="$ManagerType" GridPane.rowIndex="7">
                            <GridPane.margin>
                               <Insets left="200.0" />
                            </GridPane.margin>
                         </RadioButton>
-                        <RadioButton fx:id="directorRadioID" mnemonicParsing="false" onMouseClicked="#setDirector" text="Director" GridPane.rowIndex="7">
+                        <RadioButton fx:id="directorRadioID" mnemonicParsing="false" onMouseClicked="#setDirector" text="Director" toggleGroup="$ManagerType" GridPane.rowIndex="7">
                            <GridPane.margin>
                               <Insets left="100.0" />
                            </GridPane.margin>
