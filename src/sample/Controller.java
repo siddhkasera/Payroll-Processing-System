@@ -5,6 +5,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
+import javax.swing.*;
 import java.time.LocalDate;
 
 //<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PayrollProcessingApp.Controller">
@@ -90,6 +91,15 @@ public class Controller {
 
     @FXML
     private MenuBar menuBarDBID;
+
+    @FXML
+    private MenuItem closeButtonID;
+
+    @FXML
+    private MenuItem importButtonID;
+
+    @FXML
+    private MenuItem exportButtonID;
 
 
 
@@ -244,6 +254,12 @@ public class Controller {
     }
 
     @FXML
+    void (ActionEvent event){
+
+
+    }
+
+    @FXML
     void setHours(ActionEvent event) {
 
     }
@@ -251,10 +267,23 @@ public class Controller {
     @FXML
     void setCS(MouseEvent event) {
 
+    }
 
-
+    @FXML
+    void close(ActionEvent event) {
 
     }
+
+    @FXML
+    void importDB(ActionEvent event){
+
+    }
+
+    @FXML
+    void exportDB(ActionEvent event) {
+
+    }
+
 
     @FXML
     void setDate(MouseEvent event) {
@@ -309,7 +338,7 @@ public class Controller {
 
     @FXML
     void setManagement(MouseEvent event) {
-        
+
 
         rateFieldID.setDisable(true);
         hrsWorkedID.setDisable(true);
