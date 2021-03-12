@@ -1,9 +1,7 @@
 package PayrollProcessingApp;
 
 import PayrollProcessing.*;
-
 import java.io.File;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.stage.FileChooser;
@@ -34,15 +32,6 @@ public class Controller {
     private static final int DIRECTOR = 3;
     private final int MAX_PT_HOURS = 100;
 
-
-    @FXML
-    private ToggleGroup ManagerType;
-
-    @FXML
-    private ToggleGroup DeptType;
-
-    @FXML
-    private ToggleGroup EmpType;
 
     @FXML
     private TextField nameFieldID;
@@ -93,7 +82,7 @@ public class Controller {
     private TextArea TextAreaID;
 
     /**
-     * Gathers and checks the selected data from the user after they press the add button
+     * Gathers and checks the selected data from the user after pressing the add button
      * to create an employee profile in the Payroll Processing system.
      *
      * @param event handles the event from button click
@@ -123,9 +112,7 @@ public class Controller {
                     deptName = ECERadioID.getText();
                     addFullTimeEmployee();
                 }
-            }
-
-            else if (partTimeRadioID.isSelected()) {
+            } else if (partTimeRadioID.isSelected()) {
 
                 double hourlyPay = Double.parseDouble(rateFieldID.getText());
 
@@ -207,6 +194,7 @@ public class Controller {
 
     /**
      * Helper method that adds an employee of part-time type into the employee database.
+     *
      * @param hourlyPay attribute needed in order to input a part-time employee
      */
     private void addPartTimeEmployee(double hourlyPay) {
@@ -272,16 +260,19 @@ public class Controller {
     }
 
     /**
+     * Clears text fields, datepicker, and deselects all radio buttons after user clicks
+     * corresponding 'clear' button on GUI
      *
-     * @param event
+     * @param event handles the event from button click
      */
     @FXML
     void clear(ActionEvent event) {
 
-        try {
+        //try {
 
             for (int i = 0; i <= numOfElements; i++) {
 
+                //clear text fields and datepicker
                 if (!nameFieldID.getText().isEmpty())
                     nameFieldID.clear();
                 else if (!hrsWorkedID.getText().isEmpty()) {
@@ -293,30 +284,40 @@ public class Controller {
                 } else if (!salaryFieldID.getText().isEmpty()) {
                     salaryFieldID.clear();
                 }
-
-                if (ManagerType.getSelectedToggle().isSelected()) {
+                //deselect radio buttons
+                else if (managerRadioID.isSelected()) {
                     managerRadioID.setSelected(false);
+                } else if (deptHeadRadioID.isSelected()) {
                     deptHeadRadioID.setSelected(false);
+                } else if (directorRadioID.isSelected()) {
                     directorRadioID.setSelected(false);
-
-                } else if (DeptType.getSelectedToggle().isSelected()) {
+                } else if (ITRadioID.isSelected()) {
                     ITRadioID.setSelected(false);
+                } else if (CSRadioID.isSelected()) {
                     CSRadioID.setSelected(false);
+                } else if (ECERadioID.isSelected()) {
                     ECERadioID.setSelected(false);
-
-                } else if (EmpType.getSelectedToggle().isSelected()) { //not deselecting for some reason in each group
+                } else if (partTimeRadioID.isSelected()) {
                     partTimeRadioID.setSelected(false);
+                } else if (fullTimeRadioID.isSelected()) {
                     fullTimeRadioID.setSelected(false);
+                } else if (managementRadioID.isSelected()) {
                     managementRadioID.setSelected(false);
                 }
+
             }
-        } catch (NullPointerException e) {
+            /*
+        }
+
+        catch (NullPointerException e) {
             if (!TextAreaID.getText().isEmpty()) {
                 str.append("\n");
             }
             str.append("There is nothing to clear. Please add information.");
             TextAreaID.setText(str.toString());
         }
+
+         */
     }
 
     @FXML
@@ -354,8 +355,8 @@ public class Controller {
      * Helper method in order to format date from yyyy-mm-dd to mm/dd/yyyy
      * to ensure proper passing of a String date into Date.java
      *
-     * @param date  attribute of String before formatting
-     * @return      formatted String for creating employee profile
+     * @param date attribute of String before formatting
+     * @return formatted String for creating employee profile
      */
     private String formatDate(String date) {
         String temp = "";
@@ -430,7 +431,7 @@ public class Controller {
 
     /**
      * Gathers and checks the selected data from GUI in order to Set Hours for a part-time employee
-     * after pressing Set Hours button. Creates temporary Parttime employee to verify they exist in employee database.
+     * after clicking Set Hours button. Creates temporary Parttime employee to verify they exist in employee database.
      *
      * @param event handles the event from button click
      */
@@ -480,9 +481,7 @@ public class Controller {
             str.append("\n");
             str.append("Please enter the hours worked.");
             TextAreaID.setText(str.toString());
-        }
-
-        catch (ArrayIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException e) {
             str.append("\n");
             str.append("Please enter all the employee's information and make sure it is correct.");
             TextAreaID.setText(str.toString());
@@ -496,15 +495,15 @@ public class Controller {
     void importDB(ActionEvent event) {
 
         try {
-        FileChooser chooser = new FileChooser();
-        chooser.setTitle("Open Source File for the import"); //check this print statement
-        chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"),
-                new FileChooser.ExtensionFilter("All Files", "*.*"));
-        Stage stage = new Stage();
-        File sourceFile = chooser.showOpenDialog(stage);
-        String filePath = sourceFile.getAbsolutePath();
-        String fileName = sourceFile.getName();
-        String command = "";
+            FileChooser chooser = new FileChooser();
+            chooser.setTitle("Open Source File for the import"); //check this print statement
+            chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"),
+                    new FileChooser.ExtensionFilter("All Files", "*.*"));
+            Stage stage = new Stage();
+            File sourceFile = chooser.showOpenDialog(stage);
+            String filePath = sourceFile.getAbsolutePath();
+            String fileName = sourceFile.getName();
+            String command = "";
 
 
             File dbName = new File(filePath);
@@ -606,8 +605,7 @@ public class Controller {
             }
             str.append("Employee database is empty");
             TextAreaID.setText(str.toString());
-        }
-        else {
+        } else {
             companyDB.processPayments();
             if (!TextAreaID.getText().isEmpty()) {
                 str.append("\n");
@@ -650,7 +648,7 @@ public class Controller {
 
 
     /**
-     * Disables unnecessary functions when user presses Full Time radio button on GUI
+     * Disables unnecessary functions when user clicks Full Time radio button on GUI
      *
      * @param event handles the event from mouse click on radio button
      */
@@ -669,7 +667,7 @@ public class Controller {
     }
 
     /**
-     * Disables unnecessary functions when user presses Full Time radio button on GUI
+     * Disables unnecessary functions when user clicks Full Time radio button on GUI
      *
      * @param event handles the event from mouse click on radio button
      */
@@ -688,7 +686,7 @@ public class Controller {
     }
 
     /**
-     * Disables unnecessary functions when user presses Part Time radio button on GUI
+     * Disables unnecessary functions when user clicks Part Time radio button on GUI
      *
      * @param event handles the event from mouse click on radio button
      */
