@@ -92,11 +92,15 @@ public class Controller {
 
         try {
             name = nameFieldID.getText();
+            if (nameFieldID.getText().isEmpty()) {
+                if (!TextAreaID.getText().isEmpty()) {
+                    str.append("\n");
+                }
+                str.append("Please input the employee name.");
+                TextAreaID.setText(str.toString());
+            }
             dateHiredStr = DateHiredID.getValue().toString(); //formatted in yyyy-mm-dd
-            System.out.println(dateHiredStr);
-
             dateHiredStr = formatDate(dateHiredStr); //reformatting date to mm/dd/yyyy
-
 
             if (fullTimeRadioID.isSelected()) {
 
@@ -152,7 +156,15 @@ public class Controller {
             }
             str.append("Please add all employee information.");
             TextAreaID.setText(str.toString());
+        }catch (NumberFormatException e){
+            if (!TextAreaID.getText().isEmpty()) {
+                str.append("\n");
+            }
+            str.append("Please input or check the hours, rate, or annual salary value.");
+            TextAreaID.setText(str.toString());
+
         }
+        //catch()
 
     }
 
@@ -201,6 +213,11 @@ public class Controller {
         Profile APProfile = new Profile(name, deptName, dateHiredStr);
         Parttime parttimeEmp = new Parttime(APProfile, hourlyPay);
         if (hourlyPay < 0) {
+            if (!TextAreaID.getText().isEmpty()) {
+                str.append("\n");
+            }
+            str.append("Rate cannot be negative.");
+            TextAreaID.setText(str.toString());
         } else if (APProfile.getDateHired().isValid()) {
             if (companyDB.add(parttimeEmp)) {
                 if (!TextAreaID.getText().isEmpty()) {
@@ -268,81 +285,77 @@ public class Controller {
     @FXML
     void clear(ActionEvent event) {
 
-        //try {
+        for (int i = 0; i <= numOfElements; i++) {
 
-            for (int i = 0; i <= numOfElements; i++) {
-
-                //clear text fields and datepicker
-                if (!nameFieldID.getText().isEmpty())
-                    nameFieldID.clear();
-                else if (!hrsWorkedID.getText().isEmpty()) {
-                    hrsWorkedID.clear();
-                } else if (!DateHiredID.getEditor().getText().isEmpty()) {
-                    DateHiredID.getEditor().clear();
-                } else if (!rateFieldID.getText().isEmpty()) {
-                    rateFieldID.clear();
-                } else if (!salaryFieldID.getText().isEmpty()) {
-                    salaryFieldID.clear();
-                }
-                //deselect radio buttons
-                else if (managerRadioID.isSelected()) {
-                    managerRadioID.setSelected(false);
-                } else if (deptHeadRadioID.isSelected()) {
-                    deptHeadRadioID.setSelected(false);
-                } else if (directorRadioID.isSelected()) {
-                    directorRadioID.setSelected(false);
-                } else if (ITRadioID.isSelected()) {
-                    ITRadioID.setSelected(false);
-                } else if (CSRadioID.isSelected()) {
-                    CSRadioID.setSelected(false);
-                } else if (ECERadioID.isSelected()) {
-                    ECERadioID.setSelected(false);
-                } else if (partTimeRadioID.isSelected()) {
-                    partTimeRadioID.setSelected(false);
-                } else if (fullTimeRadioID.isSelected()) {
-                    fullTimeRadioID.setSelected(false);
-                } else if (managementRadioID.isSelected()) {
-                    managementRadioID.setSelected(false);
-                }
-
+            //clear text fields and datepicker
+            if (!nameFieldID.getText().isEmpty())
+                nameFieldID.clear();
+            else if (!hrsWorkedID.getText().isEmpty()) {
+                hrsWorkedID.clear();
+            } else if (!DateHiredID.getEditor().getText().isEmpty()) {
+                DateHiredID.getEditor().clear();
+            } else if (!rateFieldID.getText().isEmpty()) {
+                rateFieldID.clear();
+            } else if (!salaryFieldID.getText().isEmpty()) {
+                salaryFieldID.clear();
             }
-            /*
-        }
-
-        catch (NullPointerException e) {
-            if (!TextAreaID.getText().isEmpty()) {
-                str.append("\n");
+            //deselect radio buttons
+            else if (managerRadioID.isSelected()) {
+                managerRadioID.setSelected(false);
+            } else if (deptHeadRadioID.isSelected()) {
+                deptHeadRadioID.setSelected(false);
+            } else if (directorRadioID.isSelected()) {
+                directorRadioID.setSelected(false);
+            } else if (ITRadioID.isSelected()) {
+                ITRadioID.setSelected(false);
+            } else if (CSRadioID.isSelected()) {
+                CSRadioID.setSelected(false);
+            } else if (ECERadioID.isSelected()) {
+                ECERadioID.setSelected(false);
+            } else if (partTimeRadioID.isSelected()) {
+                partTimeRadioID.setSelected(false);
+            } else if (fullTimeRadioID.isSelected()) {
+                fullTimeRadioID.setSelected(false);
+            } else if (managementRadioID.isSelected()) {
+                managementRadioID.setSelected(false);
             }
-            str.append("There is nothing to clear. Please add information.");
-            TextAreaID.setText(str.toString());
-        }
 
-         */
+        }
     }
-
+    /**
+     * Prints employee database
+     * @param event handles the event for Print All Employees button
+     */
     @FXML
     void printAll(ActionEvent event) {
         str.append(companyDB.print());
+        str.append("\n");
         if (!TextAreaID.getText().isEmpty()) {
             str.append("\n");
         }
         TextAreaID.setText(str.toString());
-
     }
-
+    /**
+     * Prints employee database by the dates they were hired on.
+     * @param event handles event for Print By Date button
+     */
     @FXML
     void printByDate(ActionEvent event) {
         str.append(companyDB.printByDate());
+        str.append("\n");
         if (!TextAreaID.getText().isEmpty()) {
             str.append("\n");
         }
         TextAreaID.setText(str.toString());
-
     }
-
+    /**
+     * Prints employee database by the department they work in.
+     * @param event handles event for Print by Date button.
+     */
     @FXML
     void printByDept(ActionEvent event) {
         str.append(companyDB.printByDepartment());
+        str.append("\n");
         if (!TextAreaID.getText().isEmpty()) {
             str.append("\n");
         }
@@ -380,7 +393,10 @@ public class Controller {
 
         return dateHiredStr;
     }
-
+    /**
+     * Removes employees from the database.
+     * @param event handles event for remove button
+     */
     @FXML
     void remove(ActionEvent event) {
 
@@ -426,7 +442,6 @@ public class Controller {
             str.append("Please add all employee information to remove.");
             TextAreaID.setText(str.toString());
         }
-
     }
 
     /**
@@ -490,7 +505,10 @@ public class Controller {
 
 
     }
-
+    /**
+     * Imports a .txt file selected by the user.
+     * @param event handles the event for import
+     */
     @FXML
     void importDB(ActionEvent event) {
 
@@ -563,7 +581,12 @@ public class Controller {
 
 
     }
-
+    /**
+     * Exports the file that the user has selected with all the information in the employee database.
+     * @param event handles event for Export
+     * @throws FileNotFoundException error when the file selected by user is not found.
+     * @throws UnsupportedEncodingException error when character encoding is not supported.
+     */
     @FXML
     void exportDB(ActionEvent event) throws FileNotFoundException, UnsupportedEncodingException {
         FileChooser chooser = new FileChooser();
@@ -610,7 +633,7 @@ public class Controller {
             if (!TextAreaID.getText().isEmpty()) {
                 str.append("\n");
             }
-            str.append("Calculation of employees is done.");
+            str.append("Calculation of employees payments is done.");
             TextAreaID.setText(str.toString());
         }
     }
@@ -705,4 +728,3 @@ public class Controller {
     }
 
 }
-
