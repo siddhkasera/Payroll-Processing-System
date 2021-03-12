@@ -170,7 +170,7 @@ public class Company {
     public String print() {
         String textNoEmp = "";
         if (numEmployee == 0) {
-            textNoEmp = "Employee database is Empty";
+            textNoEmp = "Employee database is empty";
             return textNoEmp;
         }
         if (numEmployee > 0) {
@@ -221,8 +221,7 @@ public class Company {
         String textNoEmp= "";
 
         if (numEmployee == 0) {
-            //textOut.append("Employee database is empty in dept");
-            textNoEmp = "Employee database is empty in dept";
+            textNoEmp = "Employee database is empty.";
             return textNoEmp;
         }
         if (numEmployee > 0) {
@@ -281,7 +280,7 @@ public class Company {
 
         String textNoEmp = "";
         if (numEmployee == 0) {
-            textNoEmp = "Employee database is empty in date";
+            textNoEmp = "Employee database is empty";
             return textNoEmp;
         }
         if (numEmployee > 0) {

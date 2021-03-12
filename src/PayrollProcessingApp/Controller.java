@@ -92,6 +92,15 @@ public class Controller {
 
         try {
             name = nameFieldID.getText();
+            if (nameFieldID.getText().isEmpty()) {
+                if (!TextAreaID.getText().isEmpty()) {
+                    str.append("\n");
+                }
+                str.append("Please input the employee name.");
+                str.append("\n");
+                TextAreaID.setText(str.toString());
+                return;
+            }
             dateHiredStr = DateHiredID.getValue().toString(); //formatted in yyyy-mm-dd
             dateHiredStr = formatDate(dateHiredStr); //reformatting date to mm/dd/yyyy
 
@@ -130,7 +139,17 @@ public class Controller {
 
                 annualSalary = Double.parseDouble(salaryFieldID.getText().toString());
 
-                if (CSRadioID.isSelected()) {
+                if (!(managerRadioID.isSelected() && deptHeadRadioID.isSelected() && directorRadioID.isSelected())) {
+                    if (nameFieldID.getText().isEmpty()) {
+                            str.append("\n");
+                        }
+                        str.append("\n");
+                        str.append("Please select a role.");
+                        str.append("\n");
+                        TextAreaID.setText(str.toString());
+                        return;
+                }
+                else if (CSRadioID.isSelected()) {
                     deptName = CSRadioID.getText(); //finding CSRadioButton label name and set that to deptname
                     addMngmntEmployee();
 
@@ -142,6 +161,17 @@ public class Controller {
                     deptName = ECERadioID.getText();
                     addMngmntEmployee();
                 }
+                else if (!(CSRadioID.isSelected() && ITRadioID.isSelected() && ECERadioID.isSelected() )){
+                    if (nameFieldID.getText().isEmpty()) {
+                        str.append("\n");
+                    }
+                    str.append("\n");
+                    str.append("Please select a department.");
+                    str.append("\n");
+                    TextAreaID.setText(str.toString());
+                    return;
+                }
+
             }
         } catch (NullPointerException e) {
             if (!TextAreaID.getText().isEmpty()) {
@@ -153,7 +183,7 @@ public class Controller {
             if (!TextAreaID.getText().isEmpty()) {
                 str.append("\n");
             }
-            str.append("Please check the hours or rate value added.");
+            str.append("Please input or check the hours, rate, or annual salary value.");
             TextAreaID.setText(str.toString());
 
         }
@@ -206,6 +236,11 @@ public class Controller {
         Profile APProfile = new Profile(name, deptName, dateHiredStr);
         Parttime parttimeEmp = new Parttime(APProfile, hourlyPay);
         if (hourlyPay < 0) {
+            if (!TextAreaID.getText().isEmpty()) {
+                str.append("\n");
+            }
+            str.append("Rate cannot be negative.");
+            TextAreaID.setText(str.toString());
         } else if (APProfile.getDateHired().isValid()) {
             if (companyDB.add(parttimeEmp)) {
                 if (!TextAreaID.getText().isEmpty()) {
