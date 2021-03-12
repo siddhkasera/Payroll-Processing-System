@@ -94,7 +94,7 @@
                                         <Insets left="20.0" />
                                     </GridPane.margin>
                                 </Label>
-                                <DatePicker fx:id="DateHiredID" editable="false" onMouseClicked="#setDate" promptText="Pick Date" GridPane.halignment="LEFT" GridPane.rowIndex="3">
+                                <DatePicker fx:id="DateHiredID" editable="false" promptText="Pick Date" GridPane.halignment="LEFT" GridPane.rowIndex="3">
                                     <GridPane.margin>
                                         <Insets left="80.0" />
                                     </GridPane.margin>
@@ -148,7 +148,7 @@
                                         <Insets left="170.0" />
                                     </GridPane.margin>
                                 </Label>
-                                <RadioButton fx:id="CSRadioID" mnemonicParsing="false" onMouseClicked="#setCS" text="CS" GridPane.rowIndex="2">
+                                <RadioButton fx:id="CSRadioID" mnemonicParsing="false" text="CS" GridPane.rowIndex="2">
                                     <padding>
                                         <Insets left="5.0" />
                                     </padding>
@@ -156,12 +156,12 @@
                                         <ToggleGroup fx:id="DeptType" />
                                     </toggleGroup>
                                 </RadioButton>
-                                <RadioButton fx:id="ECERadioID" mnemonicParsing="false" onMouseClicked="#setECE" text="ECE" toggleGroup="$DeptType" GridPane.rowIndex="2">
+                                <RadioButton fx:id="ECERadioID" mnemonicParsing="false" text="ECE" toggleGroup="$DeptType" GridPane.rowIndex="2">
                                     <GridPane.margin>
                                         <Insets left="200.0" />
                                     </GridPane.margin>
                                 </RadioButton>
-                                <RadioButton fx:id="ITRadioID" mnemonicParsing="false" onMouseClicked="#setIT" text="IT" toggleGroup="$DeptType" GridPane.rowIndex="2">
+                                <RadioButton fx:id="ITRadioID" mnemonicParsing="false" text="IT" toggleGroup="$DeptType" GridPane.rowIndex="2">
                                     <GridPane.margin>
                                         <Insets left="100.0" />
                                     </GridPane.margin>
@@ -169,7 +169,7 @@
                                 <Button fx:id="clearButtonID" mnemonicParsing="false" onAction="#clear" text="Clear" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                 <Button fx:id="addButtonID" mnemonicParsing="false" onAction="#add" text="Add Employee" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                 <Button fx:id="removeButtonID" mnemonicParsing="false" onAction="#remove" text="Remove Employee" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                <Button fx:id="setHoursButton" mnemonicParsing="false" onAction="#setHours" text="Set Hours" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                <Button fx:id="setHoursButton" mnemonicParsing="false" text="Set Hours" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                                 <TextField fx:id="hrsWorkedID" layoutX="180.0" layoutY="168.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="23.0" prefWidth="70.0" promptText="Enter Hours" GridPane.rowIndex="6">
                                     <GridPane.margin>
                                         <Insets left="100.0" />

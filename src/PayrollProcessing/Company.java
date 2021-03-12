@@ -13,7 +13,9 @@ public class Company {
     private Employee[] emplist = new Employee[CAPACITY];
     private static final int NOT_FOUND = -1;
     private int empExists;
-    StringBuilder textOut = new StringBuilder();
+    private StringBuilder textOut = new StringBuilder();
+    private String outStr = "";
+
 
     /**
      * Private method is looks for an employee in an array.
@@ -92,7 +94,6 @@ public class Company {
      * @return the number of employee in the array.
      */
     public int getNumEmployee() {
-
         return numEmployee;
     }
 
@@ -118,7 +119,7 @@ public class Company {
     }
 
     /**
-     * Sets hours for a parttime employee
+     * Sets hours for a part time employee
      *
      * @param employee object whose hours have to be set
      * @return true if the hours is successfully set else false.
@@ -163,9 +164,9 @@ public class Company {
 
     /**
      * Creates a string builder for the employees.
-     * @return string builder that was built.
+     * @return string a string that was built.
      */
-    public StringBuilder print() {
+    public String print() {
         if (numEmployee == 0) {
             textOut.append("Employee database is Empty");
         }
@@ -173,16 +174,17 @@ public class Company {
             textOut.append("\n");
             textOut.append("--Printing earning statements for all employees--");
             textOut.append("\n");
-
             for (int i = 0; i < numEmployee; i++) {
                 textOut.append(emplist[i].toString());
                 textOut.append("\n");
             }
             textOut.append("--End of list.");
-           // textOut.append("\n");
+            textOut.append("\n");
 
         }
-        return textOut;
+        outStr = textOut.toString();
+
+        return outStr;
     }
 
 
@@ -209,9 +211,9 @@ public class Company {
 
     /**
      * Creates a string builder for the department the employees work for.
-     * @return string builder that was built.
+     * @return string that was built.
      */
-    public StringBuilder printByDepartment() {
+    public String printByDepartment() {
         String[] arrayOfDept = new String[numEmployee];
 
         if (numEmployee == 0) {
@@ -236,13 +238,12 @@ public class Company {
             }
             textOut.append("--End of list.");
         }
-
-    return textOut;
+        outStr = textOut.toString();
+         return outStr;
     }
 
     /**
      * Helper method to sort the dates in ascending order
-     *
      * @param sortDate is a copy of the book array so it doesn't affect the actual
      *                 positions in the emplist array
      */
@@ -266,9 +267,9 @@ public class Company {
 
     /**
      * Creates a string builder by date hired for the employees.
-     * @return string builder that was built.
+     * @return string that was built.
      */
-    public StringBuilder printByDate() {
+    public String printByDate() {
         Employee[] sortDate = new Employee[emplist.length];
 
         if (numEmployee == 0) {
@@ -289,7 +290,8 @@ public class Company {
             }
             textOut.append("--End of list.");
         }
-        return textOut;
+        outStr = textOut.toString();
+        return outStr;
 
     }
 

@@ -93,9 +93,6 @@ public class Controller {
     private RadioButton directorRadioID;
 
     @FXML
-    private MenuBar menuBarDBID;
-
-    @FXML
     private TextArea TextAreaID;
 
     @FXML
@@ -320,6 +317,11 @@ public class Controller {
         }
     }
 
+    /**
+     * Prints employee database
+     * @param event is the creates when user clicks on Print All Employees button
+     */
+
     @FXML
     void printAll(ActionEvent event) {
        str.append(companyDB.print());
@@ -327,9 +329,12 @@ public class Controller {
             str.append("\n");
         }
         TextAreaID.setText(str.toString());
-
     }
 
+    /**
+     * Prints employee database by the dates they were hired on.
+     * @param event is created when the user clicks on Print By Date button
+     */
     @FXML
     void printByDate(ActionEvent event) {
         str.append(companyDB.printByDate());
@@ -340,6 +345,10 @@ public class Controller {
 
     }
 
+    /**
+     * Prints employee database by the department they work in.
+     * @param event is created when the user clicks on Print by Date button.
+     */
     @FXML
     void printByDept(ActionEvent event) {
         str.append(companyDB.printByDepartment());
@@ -349,6 +358,10 @@ public class Controller {
         TextAreaID.setText(str.toString());
     }
 
+    /**
+     * Removes employees from the database.
+     * @param event is created when the user clicks on remove button
+     */
     @FXML
     void remove(ActionEvent event) {
 
@@ -393,17 +406,11 @@ public class Controller {
 
     }
 
-    @FXML
-    void setHours(ActionEvent event) {
 
-    }
-
-    @FXML
-    void setCS(MouseEvent event) {
-
-    }
-
-
+    /**
+     * Imports a .txt file selected by the user.
+     * @param event is created when the user clicks on import.
+     */
     @FXML
     void importDB(ActionEvent event) {
         FileChooser chooser = new FileChooser();
@@ -475,6 +482,12 @@ public class Controller {
 
     }
 
+    /**
+     * Exports the file that the user has selected with all the information in the employee database.
+     * @param event is created when the user clicks on Export
+     * @throws FileNotFoundException error when the file selected by user is not found.
+     * @throws UnsupportedEncodingException error when character encoding is not supported.
+     */
     @FXML
     void exportDB(ActionEvent event) throws FileNotFoundException, UnsupportedEncodingException {
         FileChooser chooser = new FileChooser();
@@ -503,36 +516,40 @@ public class Controller {
         }
     }
 
-
-    @FXML
-    void setDate(MouseEvent event) {
-
-    }
-
+    /**
+     * Sets the role to 1
+     * @param event is created when the user clicks on manager radio button
+     */
     @FXML
     void setManager(MouseEvent event) {
         role = MANAGER;
     }
 
+    /**
+     * Sets the role to 2
+     * @param event is created when the user clicks on department head radio button
+     */
     @FXML
     void setDepartmentHead(MouseEvent event) {
         role = DEPT_HEAD;
     }
 
+    /**
+     * Sets role to 3
+     * @param event is created when the user clicks on director radio button
+     */
     @FXML
     void setDirector(MouseEvent event) {
         role = DIRECTOR;
     }
 
-    @FXML
-    void setECE(MouseEvent event) {
 
-    }
-
-
+    /**
+     * Disables the text area and radio button when full time role is selected
+     * @param event is created when the user clicks on full time radio button
+     */
     @FXML
     void setFullTime(MouseEvent event) {
-
         hrsWorkedID.setDisable(true);
         rateFieldID.setDisable(true);
         setHoursButton.setDisable(true);
@@ -542,18 +559,14 @@ public class Controller {
         deptHeadRadioID.setDisable(true);
         managerRadioID.setDisable(true);
         salaryFieldID.setDisable(false);
-
     }
 
-    @FXML
-    void setIT(MouseEvent event) {
-
-    }
-
+    /**
+     * Disables the text area and radio button when the management role is selected.
+     * @param event is created when the user selects management role
+     */
     @FXML
     void setManagement(MouseEvent event) {
-
-
         rateFieldID.setDisable(true);
         hrsWorkedID.setDisable(true);
         setHoursButton.setDisable(true);
@@ -565,10 +578,12 @@ public class Controller {
 
     }
 
-
+    /**
+     * Disables the text area and radio button when the part time role is selected.
+     * @param event is created when the user selects part time role.
+     */
     @FXML
     void setPartTime(MouseEvent event) {
-
         rateFieldID.setDisable(false);
         hrsWorkedID.setDisable(false);
         setHoursButton.setDisable(false);
@@ -579,7 +594,5 @@ public class Controller {
         salaryFieldID.setDisable(true);
 
     }
-
-
 }
 
