@@ -1,7 +1,9 @@
 package PayrollProcessingApp;
 
 import PayrollProcessing.*;
+
 import java.io.File;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.stage.FileChooser;
@@ -9,6 +11,7 @@ import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
 import java.io.FileNotFoundException;
@@ -97,10 +100,13 @@ public class Controller {
                     str.append("\n");
                 }
                 str.append("Please input the employee name.");
+                str.append("\n");
                 TextAreaID.setText(str.toString());
+                return;
             }
             dateHiredStr = DateHiredID.getValue().toString(); //formatted in yyyy-mm-dd
             dateHiredStr = formatDate(dateHiredStr); //reformatting date to mm/dd/yyyy
+
 
             if (fullTimeRadioID.isSelected()) {
 
@@ -116,6 +122,7 @@ public class Controller {
                     deptName = ECERadioID.getText();
                     addFullTimeEmployee();
                 }
+
             } else if (partTimeRadioID.isSelected()) {
 
                 double hourlyPay = Double.parseDouble(rateFieldID.getText());
@@ -132,21 +139,46 @@ public class Controller {
                     deptName = ECERadioID.getText(); //finding CSRadioButton label name and set that to deptname
                     addPartTimeEmployee(hourlyPay);
                 }
+            }
 
-            } else if (managementRadioID.isSelected()) {
+             else if (managementRadioID.isSelected()) {
 
                 annualSalary = Double.parseDouble(salaryFieldID.getText().toString());
 
-                if (CSRadioID.isSelected()) {
+                 if (CSRadioID.isSelected()) {
                     deptName = CSRadioID.getText(); //finding CSRadioButton label name and set that to deptname
-                    addMngmntEmployee();
+                     if (role != 0 || role != 1 || role != 3) {
+                         if (!TextAreaID.getText().isEmpty()) {
+                             str.append("\n");
+                         }
+                         str.append("Please check if you selected a role for manager.");
+                         TextAreaID.setText(str.toString());
+                         return;
+                     }
+                     addMngmntEmployee();
 
                 } else if (ITRadioID.isSelected()) {
                     deptName = ITRadioID.getText();
+                     if (role != 0 || role != 1 || role != 3) {
+                         if (!TextAreaID.getText().isEmpty()) {
+                             str.append("\n");
+                         }
+                         str.append("Please check if you selected a role for manager.");
+                         TextAreaID.setText(str.toString());
+                         return;
+                     }
                     addMngmntEmployee();
 
                 } else if (ECERadioID.isSelected()) {
                     deptName = ECERadioID.getText();
+                     if (role != 0 || role != 1 || role != 3) {
+                         if (!TextAreaID.getText().isEmpty()) {
+                             str.append("\n");
+                         }
+                         str.append("Please check if you selected a role for manager.");
+                         TextAreaID.setText(str.toString());
+                         return;
+                     }
                     addMngmntEmployee();
                 }
             }
@@ -156,7 +188,8 @@ public class Controller {
             }
             str.append("Please add all employee information.");
             TextAreaID.setText(str.toString());
-        }catch (NumberFormatException e){
+
+        } catch (NumberFormatException e) {
             if (!TextAreaID.getText().isEmpty()) {
                 str.append("\n");
             }
@@ -164,7 +197,6 @@ public class Controller {
             TextAreaID.setText(str.toString());
 
         }
-        //catch()
 
     }
 
@@ -322,8 +354,10 @@ public class Controller {
 
         }
     }
+
     /**
      * Prints employee database
+     *
      * @param event handles the event for Print All Employees button
      */
     @FXML
@@ -335,8 +369,10 @@ public class Controller {
         }
         TextAreaID.setText(str.toString());
     }
+
     /**
      * Prints employee database by the dates they were hired on.
+     *
      * @param event handles event for Print By Date button
      */
     @FXML
@@ -348,8 +384,10 @@ public class Controller {
         }
         TextAreaID.setText(str.toString());
     }
+
     /**
      * Prints employee database by the department they work in.
+     *
      * @param event handles event for Print by Date button.
      */
     @FXML
@@ -393,8 +431,10 @@ public class Controller {
 
         return dateHiredStr;
     }
+
     /**
      * Removes employees from the database.
+     *
      * @param event handles event for remove button
      */
     @FXML
@@ -430,7 +470,7 @@ public class Controller {
                 if (!TextAreaID.getText().isEmpty()) {
                     str.append("\n");
                 }
-                str.append("Employee does not exist");
+                str.append("Employee does not exist.");
             }
             TextAreaID.setText(str.toString());
 
@@ -505,8 +545,10 @@ public class Controller {
 
 
     }
+
     /**
      * Imports a .txt file selected by the user.
+     *
      * @param event handles the event for import
      */
     @FXML
@@ -581,10 +623,12 @@ public class Controller {
 
 
     }
+
     /**
      * Exports the file that the user has selected with all the information in the employee database.
+     *
      * @param event handles event for Export
-     * @throws FileNotFoundException error when the file selected by user is not found.
+     * @throws FileNotFoundException        error when the file selected by user is not found.
      * @throws UnsupportedEncodingException error when character encoding is not supported.
      */
     @FXML
