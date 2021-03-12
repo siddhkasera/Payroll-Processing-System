@@ -1,4 +1,4 @@
-package PayrollProcessingApp;
+package PayrollProcessing;
 
 import java.util.Calendar;
 
@@ -116,6 +116,7 @@ public class Date implements Comparable<Date> {
      * @return true if the date is valid with the correct day in a particular month for a year otherwise false
      */
     public boolean isValid() {
+
         boolean leap = false;
         if (year < startYear || year > endYear) {
             return false;
@@ -125,8 +126,9 @@ public class Date implements Comparable<Date> {
         int newDay = futureDate.getDay(); //9
         int newMonth = futureDate.getMonth(); //2
         int newYear = futureDate.getYear(); //2021
+
         if (year == newYear) {
-            if (month >= newMonth) {
+            if (month > newMonth) {
                 return false;
             } else if (month == newMonth) {
                 if (day > newDay)

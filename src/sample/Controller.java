@@ -1,21 +1,31 @@
 package PayrollProcessingApp;
+
+import PayrollProcessing.*;
+import com.sun.media.jfxmediaimpl.platform.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
-import javax.swing.*;
-import java.time.LocalDate;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 //<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PayrollProcessingApp.Controller">
 
 public class Controller {
 
+
     //bringing in company and employee array
     Company companyDB = new Company();
     DatePicker datePick = new DatePicker();
-    LocalDate dateHired = datePick.getValue();
+    // LocalDate dateHired = datePick.getValue();
+    //idk how to use this yet but I think it is how appending the strings will work
+    StringBuilder str = new StringBuilder();
+    public static final int numOfElements = 14;
     public static String name;
     public static String deptName;
     public static String dateHiredStr;
@@ -25,6 +35,15 @@ public class Controller {
 
     @FXML
     private GridPane gridPaneTab1;
+
+    @FXML
+    private ToggleGroup ManagerType;
+
+    @FXML
+    private ToggleGroup DeptType;
+
+    @FXML
+    private ToggleGroup EmpType;
 
     @FXML
     private TextField nameFieldID;
@@ -101,136 +120,212 @@ public class Controller {
     @FXML
     private MenuItem exportButtonID;
 
-
+    @FXML
+    private TextArea TextAreaID;
 
 
     @FXML
     void add(ActionEvent event) {
 
-        //handle for if the user doesn't input something for all text fields
-        //check if date is not in the future
-        //QUESTION: can we use isValid() method to check date?
-        //QUESTION: does the invalid date error message have to come before or after you press add employee?
+        try {
+            name = nameFieldID.getText();
+            dateHiredStr = DateHiredID.getValue().toString(); //formatted in yyyy-mm-dd
 
+            if (fullTimeRadioID.isSelected()) {
 
-        name = nameFieldID.getText();
-        dateHiredStr = dateHired.toString(); //formatted in yyyy-mm-dd
+                annualSalary = Double.parseDouble(salaryFieldID.getText());
 
-
-
-        if (fullTimeRadioID.isSelected()) {
-
-            annualSalary = Double.parseDouble(salaryFieldID.getText());
-
-            if (CSRadioID.isSelected()) {
-                deptName = CSRadioID.getText(); //finding CSRadioButton label name and set that to deptname
-                Profile AFProfile = new Profile(name, deptName, dateHiredStr);
-                Fulltime fulltimeEmp = new Fulltime(AFProfile, annualSalary);
-                if (AFProfile.getDateHired().isValid()) {
-                    companyDB.add(fulltimeEmp);
-                }
-            } else if (ITRadioID.isSelected()) {
-                deptName = CSRadioID.getText(); //finding CSRadioButton label name and set that to deptname
-                Profile AFProfile = new Profile(name, deptName, dateHiredStr);
-                Fulltime fulltimeEmp = new Fulltime(AFProfile, annualSalary);
-                if (AFProfile.getDateHired().isValid()) {
-                    companyDB.add(fulltimeEmp);
-                }
-            } else if (ECERadioID.isSelected()) {
-                deptName = CSRadioID.getText(); //finding CSRadioButton label name and set that to deptname
-                Profile AFProfile = new Profile(name, deptName, dateHiredStr);
-                Fulltime fulltimeEmp = new Fulltime(AFProfile, annualSalary);
-                if (AFProfile.getDateHired().isValid()) {
-                    companyDB.add(fulltimeEmp);
-                }
-                else{
-
-                }
-
-            }
-        }
-
-        if (partTimeRadioID.isSelected()) {
-
-            double hourlyPay = Double.parseDouble(rateFieldID.getText());
-
-            if (CSRadioID.isSelected()) {
-                deptName = CSRadioID.getText(); //finding CSRadioButton label name and set that to deptname
-                Profile APProfile = new Profile(name, deptName, dateHiredStr);
-                Parttime parttimeEmp = new Parttime(APProfile, hourlyPay);
-                if (hourlyPay < 0) {
-                } else if (APProfile.getDateHired().isValid()) {
-                    if (companyDB.add(parttimeEmp)) {
-                        //print that the employee is added in textarea
-
-                    } else {
-                        //print employee is already in the list
-                    }
-                } else {
-                    //print what is below but in text area
-                    //System.out.println(parttimeEmp.getProfile().getDateHired().getMonth() + "/" + parttimeEmp.getProfile().getDateHired().getDay() + "/" +
-                    // parttimeEmp.getProfile().getDateHired().getYear() + " is not a valid date!");
-                }
-            } else if (ITRadioID.isSelected()) {
-                deptName = ITRadioID.getText(); //finding CSRadioButton label name and set that to deptname
-                Profile APProfile = new Profile(name, deptName, dateHiredStr);
-                Parttime parttimeEmp = new Parttime(APProfile, hourlyPay);
-                if (hourlyPay < 0) {
-                } else if (APProfile.getDateHired().isValid()) {
-                    if (companyDB.add(parttimeEmp)) {
-                        //print that the employee is added in textarea
-
-                    } else {
-                        //print employee is already in the list
-                    }
-                } else {
-                    //print what is below but in text area
-                    //System.out.println(parttimeEmp.getProfile().getDateHired().getMonth() + "/" + parttimeEmp.getProfile().getDateHired().getDay() + "/" +
-                    // parttimeEmp.getProfile().getDateHired().getYear() + " is not a valid date!");
-                }
-
-            } else if (ECERadioID.isSelected()) {
-                deptName = ECERadioID.getText(); //finding CSRadioButton label name and set that to deptname
-                Profile APProfile = new Profile(name, deptName, dateHiredStr);
-                Parttime parttimeEmp = new Parttime(APProfile, hourlyPay);
-
-                if (hourlyPay < 0) {
-                } else if (APProfile.getDateHired().isValid()) {
-                    if (companyDB.add(parttimeEmp)) {
-                        //print that the employee is added in textarea
-
-                    } else {
-                        //print employee is already in the list
-                    }
-                } else {
-                    //print what is below but in text area
-                    //System.out.println(parttimeEmp.getProfile().getDateHired().getMonth() + "/" + parttimeEmp.getProfile().getDateHired().getDay() + "/" +
-                    // parttimeEmp.getProfile().getDateHired().getYear() + " is not a valid date!");
+                if (CSRadioID.isSelected()) {
+                    deptName = CSRadioID.getText();
+                    addFullTimeEmployee();
+                } else if (ITRadioID.isSelected()) {
+                    deptName = ITRadioID.getText();
+                    addFullTimeEmployee();
+                } else if (ECERadioID.isSelected()) {
+                    deptName = ECERadioID.getText();
+                    addFullTimeEmployee();
                 }
             }
 
-        }
+            if (partTimeRadioID.isSelected()) {
 
-        else if(managementRadioID.isSelected()) {
+                double hourlyPay = Double.parseDouble(rateFieldID.getText());
 
-            annualSalary = Double.parseDouble(salaryFieldID.getText());
+                if (CSRadioID.isSelected()) {
+                    deptName = CSRadioID.getText(); //finding CSRadioButton label name and set that to deptname
+                    addPartTimeEmployee(hourlyPay);
 
-            if (CSRadioID.isSelected()){
-                deptName = CSRadioID.getText(); //finding CSRadioButton label name and set that to deptname
-                //you can also change role to String in constructor and getText for which role it is.. compare it in constructor
-                Profile AMProfile = new Profile(name, deptName, dateHiredStr);
-                Management mngmntEmp = new Management(AMProfile, annualSalary, role);
+                } else if (ITRadioID.isSelected()) {
+                    deptName = ITRadioID.getText(); //finding CSRadioButton label name and set that to deptname
+                    addPartTimeEmployee(hourlyPay);
 
+                } else if (ECERadioID.isSelected()) {
+                    deptName = ECERadioID.getText(); //finding CSRadioButton label name and set that to deptname
+                    addPartTimeEmployee(hourlyPay);
+                }
+
+            } else if (managementRadioID.isSelected()) {
+
+                annualSalary = Double.parseDouble(salaryFieldID.getText().toString());
+
+                if (CSRadioID.isSelected()) {
+                    deptName = CSRadioID.getText(); //finding CSRadioButton label name and set that to deptname
+                    addMngmntEmployee();
+
+                } else if (ITRadioID.isSelected()) {
+                    deptName = ITRadioID.getText();
+                    addMngmntEmployee();
+
+                } else if (ECERadioID.isSelected()) {
+                    deptName = ECERadioID.getText();
+                    addMngmntEmployee();
+                }
             }
-
+        } catch (NullPointerException e) {
+            if (!TextAreaID.getText().isEmpty()) {
+                str.append("\n");
+            }
+            str.append("Please add all employee information.");
+            TextAreaID.setText(str.toString());
         }
 
+    }
+
+    private void addMngmntEmployee() {
+        Profile AMProfile = new Profile(name, deptName, dateHiredStr);
+        Management mngmntEmp = new Management(AMProfile, annualSalary, role);
+        if (annualSalary < 0) {
+            if (!TextAreaID.getText().isEmpty()) {
+                str.append("\n");
+            }
+            str.append("Salary cannot be negative.");
+            TextAreaID.setText(str.toString());
+        } else if (AMProfile.getDateHired().isValid()) {
+            if (companyDB.add(mngmntEmp)) {
+                if (!TextAreaID.getText().isEmpty()) {
+                    str.append("\n");
+                }
+                str.append("Employee added.");
+
+            } else {
+                if (!TextAreaID.getText().isEmpty()) {
+                    str.append("\n");
+                }
+                str.append("Employee is already in the list.");//print employee is already in the list
+            }
+            TextAreaID.setText(str.toString());
+        } else {
+            if (!TextAreaID.getText().isEmpty()) {
+                str.append("\n");
+            }
+            str.append(mngmntEmp.getProfile().getDateHired().getMonth() + "/" + mngmntEmp.getProfile().getDateHired().getDay() + "/" +
+                    mngmntEmp.getProfile().getDateHired().getYear() + " is not a valid date!");
+            TextAreaID.setText(str.toString());
         }
+    }
+
+    private void addPartTimeEmployee(double hourlyPay) {
+        Profile APProfile = new Profile(name, deptName, dateHiredStr);
+        Parttime parttimeEmp = new Parttime(APProfile, hourlyPay);
+        if (hourlyPay < 0) {
+        } else if (APProfile.getDateHired().isValid()) {
+            if (companyDB.add(parttimeEmp)) {
+                if (!TextAreaID.getText().isEmpty()) {
+                    str.append("\n");
+                }
+                str.append("Employee added.");
+
+            } else {
+                if (!TextAreaID.getText().isEmpty()) {
+                    str.append("\n");
+                }
+                str.append("Employee is already in the list.");//print employee is already in the list
+            }
+            TextAreaID.setText(str.toString());
+        } else {
+            if (!TextAreaID.getText().isEmpty()) {
+                str.append("\n");
+            }
+            str.append(parttimeEmp.getProfile().getDateHired().getMonth() + "/" + parttimeEmp.getProfile().getDateHired().getDay() + "/" +
+                    parttimeEmp.getProfile().getDateHired().getYear() + " is not a valid date!");
+            TextAreaID.setText(str.toString());
+        }
+    }
+
+    private void addFullTimeEmployee() {
+        Profile AFProfile = new Profile(name, deptName, dateHiredStr);
+        Fulltime fulltimeEmp = new Fulltime(AFProfile, annualSalary);
+        if (annualSalary < 0) {
+            if (!TextAreaID.getText().isEmpty()) {
+                str.append("\n");
+            }
+            str.append("Salary cannot be negative.");
+            TextAreaID.setText(str.toString());
+        } else if (AFProfile.getDateHired().isValid()) {
+            if (companyDB.add(fulltimeEmp)) {
+                if (!TextAreaID.getText().isEmpty()) {
+                    str.append("\n");
+                }
+                str.append("Employee added.");
+
+            } else {
+                if (!TextAreaID.getText().isEmpty()) {
+                    str.append("\n");
+                }
+                str.append("Employee is already in the list.");//print employee is already in the list
+            }
+            TextAreaID.setText(str.toString());
+        } else {
+            str.append("\n");
+            str.append(fulltimeEmp.getProfile().getDateHired().getMonth() + "/" + fulltimeEmp.getProfile().getDateHired().getDay() + "/" +
+                    fulltimeEmp.getProfile().getDateHired().getYear() + " is not a valid date!");
+            TextAreaID.setText(str.toString());
+        }
+    }
 
     @FXML
     void clear(ActionEvent event) {
-        managementRadioID.setDisable(false);
 
+        try {
+
+            for (int i = 0; i <= numOfElements; i++) {
+
+                if (!nameFieldID.getText().isEmpty())
+                    nameFieldID.clear();
+                else if (!hrsWorkedID.getText().isEmpty()) {
+                    hrsWorkedID.clear();
+                } else if (!DateHiredID.getEditor().getText().isEmpty()) {
+                    DateHiredID.getEditor().clear();
+                } else if (!rateFieldID.getText().isEmpty()) {
+                    rateFieldID.clear();
+                } else if (!salaryFieldID.getText().isEmpty()) {
+                    salaryFieldID.clear();
+                }
+
+                if (ManagerType.getSelectedToggle().isSelected()) {
+                    managerRadioID.setSelected(false);
+                    deptHeadRadioID.setSelected(false);
+                    directorRadioID.setSelected(false);
+
+                } else if (DeptType.getSelectedToggle().isSelected()) {
+                    ITRadioID.setSelected(false);
+                    CSRadioID.setSelected(false);
+                    ECERadioID.setSelected(false);
+
+                } else if (EmpType.getSelectedToggle().isSelected()) { //not deselecting for some reason in each group
+                    partTimeRadioID.setSelected(false);
+                    fullTimeRadioID.setSelected(false);
+                    managementRadioID.setSelected(false);
+                }
+            }
+        }
+        catch (NullPointerException e) {
+            if (!TextAreaID.getText().isEmpty()) {
+                str.append("\n");
+            }
+            str.append("There is nothing to clear. Please add information.");
+            TextAreaID.setText(str.toString());
+        }
     }
 
     @FXML
@@ -254,12 +349,6 @@ public class Controller {
     }
 
     @FXML
-    void (ActionEvent event){
-
-
-    }
-
-    @FXML
     void setHours(ActionEvent event) {
 
     }
@@ -272,15 +361,84 @@ public class Controller {
     @FXML
     void close(ActionEvent event) {
 
+
     }
 
     @FXML
-    void importDB(ActionEvent event){
+    void importDB(ActionEvent event) {
+        FileChooser chooser = new FileChooser();
+        Label newLabel = new Label();
+        chooser.setTitle("Open Source File for the import");
+        chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"),
+                new FileChooser.ExtensionFilter("All Files", "*.*"));
+        Stage stage = new Stage();
+        File sourceFile = chooser.showOpenDialog(stage);
+        String fileName = sourceFile.getAbsolutePath();
+        String command = "";
+        //System.out.println("the file path  is "+ fileName);
+
+        try {
+            File dbName = new File(fileName);
+            Scanner readFile = new Scanner(dbName);
+            while (readFile.hasNextLine()) {
+                String data = readFile.nextLine();
+                String[] arrOfStr = data.split(",");
+                command = arrOfStr[0];
+                // System.out.println("Command is:"+ command);
+                switch (command) {
+                    case "P": //handling command add for parttime
+                        name = arrOfStr[1];
+                        deptName = arrOfStr[2];
+                        dateHiredStr = arrOfStr[3];
+                        Double hourlyPay = Double.parseDouble(arrOfStr[4]);
+                        Profile APProfile = new Profile(name, deptName, dateHiredStr);
+                        Parttime parttimeEmp = new Parttime(APProfile, hourlyPay);
+                        companyDB.add(parttimeEmp);
+                    case "F": //handling command add for full time
+                        name = arrOfStr[1];
+                        deptName = arrOfStr[2];
+                        dateHiredStr = arrOfStr[3];
+                        annualSalary = Double.parseDouble(arrOfStr[4]);
+                        Profile AFProfile = new Profile(name, deptName, dateHiredStr);
+                        Fulltime fulltimeEmp = new Fulltime(AFProfile, annualSalary);
+                        companyDB.add(fulltimeEmp);
+                    case "M": //handling command add for management
+                        name = arrOfStr[1];
+                        deptName = arrOfStr[2];
+                        dateHiredStr = arrOfStr[3];
+                        if (arrOfStr.length > 5) {
+                            annualSalary = Double.parseDouble(arrOfStr[4]);
+                            role = Integer.parseInt(arrOfStr[5]);
+                        }
+                        Profile AMProfile = new Profile(name, deptName, dateHiredStr);
+                        Management mngmntEmp = new Management(AMProfile, annualSalary, role);
+                        companyDB.add(mngmntEmp);
+                }
+                //System.out.println("The company db is");
+
+                //System.out.println("the line in the file is:"+data);
+            }
+            //companyDB.print();
+            readFile.close();
+
+        } catch (FileNotFoundException e) {
+            System.out.println("The error message is" + e.getMessage());
+            e.printStackTrace();
+        }
+            catch (NullPointerException e) {
+            if (!TextAreaID.getText().isEmpty()) {
+                str.append("\n");
+            }
+            str.append("No import file selected");
+            TextAreaID.setText(str.toString());
+        }
+
 
     }
 
     @FXML
     void exportDB(ActionEvent event) {
+
 
     }
 
@@ -352,7 +510,6 @@ public class Controller {
     }
 
 
-
     @FXML
     void setPartTime(MouseEvent event) {
 
@@ -366,10 +523,6 @@ public class Controller {
         salaryFieldID.setDisable(true);
 
     }
-
-
-    //idk how to use this yet but I think it is how appending the strings will work
-    StringBuilder str = new StringBuilder();
 
 
 }

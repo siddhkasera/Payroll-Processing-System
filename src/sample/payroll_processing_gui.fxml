@@ -49,6 +49,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PayrollProcessingApp.Controller">
    <top>
@@ -58,8 +59,8 @@
                <content>
                   <GridPane fx:id="gridPaneTab1" alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="242.0" prefWidth="544.0">
                     <columnConstraints>
-                      <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="423.8" minWidth="10.0" prefWidth="340.8" />
-                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="378.9999633789063" minWidth="10.0" prefWidth="147.2" />
+                      <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="423.8" minWidth="10.0" prefWidth="349.0" />
+                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="378.9999633789063" minWidth="10.0" prefWidth="125.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints maxHeight="56.80000381469726" minHeight="9.600014114379881" prefHeight="22.99998779296875" vgrow="SOMETIMES" />
@@ -77,20 +78,23 @@
                               <Insets left="10.0" />
                            </padding>
                         </Label>
-                        <TextField fx:id="nameFieldID" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="23.0" prefWidth="100.0" GridPane.rowIndex="1">
+                        <TextField fx:id="nameFieldID" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="23.0" prefWidth="100.0" promptText="Enter Name" GridPane.rowIndex="1">
                            <opaqueInsets>
                               <Insets />
                            </opaqueInsets>
                            <GridPane.margin>
                               <Insets left="70.0" />
                            </GridPane.margin>
+                           <font>
+                              <Font size="10.0" />
+                           </font>
                         </TextField>
                         <Label text="Payroll Processing" GridPane.halignment="CENTER">
                            <GridPane.margin>
                               <Insets left="20.0" />
                            </GridPane.margin>
                         </Label>
-                        <DatePicker fx:id="DateHiredID" editable="false" onMouseClicked="#setDate" GridPane.halignment="LEFT" GridPane.rowIndex="3">
+                        <DatePicker fx:id="DateHiredID" editable="false" onMouseClicked="#setDate" promptText="Pick Date" GridPane.halignment="LEFT" GridPane.rowIndex="3">
                            <GridPane.margin>
                               <Insets left="80.0" />
                            </GridPane.margin>
@@ -113,13 +117,13 @@
                               <Insets left="100.0" />
                            </GridPane.margin>
                         </RadioButton>
-                        <TextField fx:id="salaryFieldID" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="21.0" prefWidth="83.0" GridPane.halignment="LEFT" GridPane.rowIndex="5">
-                           <padding>
-                              <Insets left="90.0" top="10.0" />
-                           </padding>
+                        <TextField fx:id="salaryFieldID" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="21.0" prefWidth="83.0" promptText="Enter Salary" GridPane.halignment="LEFT" GridPane.rowIndex="5">
                            <GridPane.margin>
                               <Insets left="100.0" />
                            </GridPane.margin>
+                           <font>
+                              <Font size="10.0" />
+                           </font>
                         </TextField>
                         <Label text="Annual Salary" GridPane.halignment="LEFT" GridPane.rowIndex="5">
                            <padding>
@@ -166,21 +170,21 @@
                         <Button fx:id="addButtonID" mnemonicParsing="false" onAction="#add" text="Add Employee" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Button fx:id="removeButtonID" mnemonicParsing="false" onAction="#remove" text="Remove Employee" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <Button fx:id="setHoursButton" mnemonicParsing="false" onAction="#setHours" text="Set Hours" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <TextField fx:id="hrsWorkedID" layoutX="180.0" layoutY="168.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="23.0" prefWidth="50.0" GridPane.rowIndex="6">
-                           <padding>
-                              <Insets top="10.0" />
-                           </padding>
+                        <TextField fx:id="hrsWorkedID" layoutX="180.0" layoutY="168.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="23.0" prefWidth="70.0" promptText="Enter Hours" GridPane.rowIndex="6">
                            <GridPane.margin>
                               <Insets left="100.0" />
                            </GridPane.margin>
+                           <font>
+                              <Font size="10.0" />
+                           </font>
                         </TextField>
-                        <TextField fx:id="rateFieldID" layoutX="180.0" layoutY="200.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="23.0" prefWidth="50.0" GridPane.rowIndex="6">
-                           <padding>
-                              <Insets top="10.0" />
-                           </padding>
+                        <TextField fx:id="rateFieldID" layoutX="180.0" layoutY="200.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="23.0" prefWidth="69.0" promptText="Enter Rate" GridPane.rowIndex="6">
                            <GridPane.margin>
                               <Insets left="220.0" />
                            </GridPane.margin>
+                           <font>
+                              <Font size="10.0" />
+                           </font>
                         </TextField>
                         <RadioButton fx:id="managerRadioID" mnemonicParsing="false" onMouseClicked="#setManager" text="Manager" GridPane.rowIndex="7">
                            <padding>
@@ -259,6 +263,6 @@
       </TabPane>
    </top>
    <bottom>
-      <TextArea prefHeight="126.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
+      <TextArea fx:id="TextAreaID" editable="false" prefHeight="126.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
    </bottom>
 </BorderPane>
