@@ -1,7 +1,9 @@
 package PayrollProcessingApp;
 
 import PayrollProcessing.*;
+import com.sun.javafx.binding.StringFormatter;
 import com.sun.media.jfxmediaimpl.platform.Platform;
+import javafx.css.converter.StringConverter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -12,7 +14,15 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Scanner;
+import java.util.regex.Matcher;
 
 //<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PayrollProcessingApp.Controller">
 
@@ -21,9 +31,6 @@ public class Controller {
 
     //bringing in company and employee array
     Company companyDB = new Company();
-    DatePicker datePick = new DatePicker();
-    // LocalDate dateHired = datePick.getValue();
-    //idk how to use this yet but I think it is how appending the strings will work
     StringBuilder str = new StringBuilder();
     public static final int numOfElements = 14;
     public static String name;
@@ -129,7 +136,28 @@ public class Controller {
 
         try {
             name = nameFieldID.getText();
-            dateHiredStr = DateHiredID.getValue().toString(); //formatted in yyyy-mm-dd
+
+            //formatting the date from DatePicker
+            String temp = "";
+            StringBuilder dateFormat = new StringBuilder();
+            dateHiredStr = DateHiredID.getValue().toString(); //is formatted in yyyy-mm-dd
+
+            //converting the str yyyy-mm-dd to mm/dd/yyyy
+            String dateHiredStrArr[] = dateHiredStr.split("-"); //splitting the yyyy-mm-dd
+            temp = dateHiredStrArr[0]; //rearranging the str to the formatting we want
+            dateHiredStrArr[0] = dateHiredStrArr[1];
+            dateHiredStrArr[1] = dateHiredStrArr[2];
+            dateHiredStrArr[2] = temp;
+            String delimiter = ","; //needed in order to split the array into a string
+            dateHiredStr = Arrays.toString(dateHiredStrArr);
+            System.out.println(dateHiredStr);
+
+            //takes the dateHiredStrArr and builds it into one string using strbuilder
+            for (String str: dateHiredStrArr)
+                dateFormat.append(str).append(delimiter);
+                dateHiredStr = dateFormat.substring(0, dateFormat.length()-1); //needed to get not have brackets in our final string
+            dateHiredStr = dateHiredStr.replaceAll(",", "/"); //replaces commas with the string that will be used as a delim in Date.java
+
 
             if (fullTimeRadioID.isSelected()) {
 
@@ -229,6 +257,9 @@ public class Controller {
         Parttime parttimeEmp = new Parttime(APProfile, hourlyPay);
         if (hourlyPay < 0) {
         } else if (APProfile.getDateHired().isValid()) {
+            if (!hrsWorkedID.getText().isEmpty()) {
+                //add the employee
+            }
             if (companyDB.add(parttimeEmp)) {
                 if (!TextAreaID.getText().isEmpty()) {
                     str.append("\n");
@@ -283,6 +314,7 @@ public class Controller {
         }
     }
 
+    //fix the clear method
     @FXML
     void clear(ActionEvent event) {
 
