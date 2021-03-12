@@ -1,5 +1,6 @@
 package PayrollProcessing;
 
+import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
 /**
@@ -167,8 +168,10 @@ public class Company {
      * @return string a string that was built.
      */
     public String print() {
+        String textNoEmp = "";
         if (numEmployee == 0) {
-            textOut.append("Employee database is Empty");
+            textNoEmp = "Employee database is Empty";
+            return textNoEmp;
         }
         if (numEmployee > 0) {
             textOut.append("\n");
@@ -182,9 +185,8 @@ public class Company {
             textOut.append("\n");
 
         }
-        outStr = textOut.toString();
+        return textOut.toString();
 
-        return outStr;
     }
 
 
@@ -216,10 +218,15 @@ public class Company {
     public String printByDepartment() {
         String[] arrayOfDept = new String[numEmployee];
 
+        String textNoEmp= "";
+
         if (numEmployee == 0) {
-            textOut.append("Employee database is empty");
+            //textOut.append("Employee database is empty in dept");
+            textNoEmp = "Employee database is empty in dept";
+            return textNoEmp;
         }
         if (numEmployee > 0) {
+            textOut.append("\n");
             textOut.append("--Printing earning statements by department--");
             textOut.append("\n");
             for (int i = 0; i < numEmployee; i++) {
@@ -238,14 +245,14 @@ public class Company {
             }
             textOut.append("--End of list.");
         }
-        outStr = textOut.toString();
-         return outStr;
+        return textOut.toString();
+
+
     }
 
     /**
      * Helper method to sort the dates in ascending order
-     * @param sortDate is a copy of the book array so it doesn't affect the actual
-     *                 positions in the emplist array
+     * @param sortDate is a copy of the book array so it doesn't affect the actual positions in the emplist array
      */
     private void sortByDate(Employee[] sortDate) {
         for (int i = 0; i < numEmployee - 1; i++) {
@@ -272,8 +279,10 @@ public class Company {
     public String printByDate() {
         Employee[] sortDate = new Employee[emplist.length];
 
+        String textNoEmp = "";
         if (numEmployee == 0) {
-            textOut.append(".Employee database is empty.");
+            textNoEmp = "Employee database is empty in date";
+            return textNoEmp;
         }
         if (numEmployee > 0) {
             textOut.append("\n");
@@ -289,18 +298,18 @@ public class Company {
                 textOut.append("\n");
             }
             textOut.append("--End of list.");
+            textOut.append("\n");
         }
-        outStr = textOut.toString();
-        return outStr;
-
+     return textOut.toString();
     }
 
     /**
      * writes the contents of emplist to the filename selected by the user
      * @param filename the path file selected by user.
+     * @throws FileNotFoundException throws file not found exception
      */
-    public void exportDatabase(String filename){
-        try {
+    public void exportDatabase(String filename) throws FileNotFoundException {
+
             PrintWriter writer = new PrintWriter(filename);
             for(int i =0; i < numEmployee; i++){
                 String output = emplist[i].toString();
@@ -309,10 +318,5 @@ public class Company {
                 writer.flush();
             }
             writer.close();
-
-        }  catch (Exception e){
-            e.printStackTrace();
-        }
-
     }
 }

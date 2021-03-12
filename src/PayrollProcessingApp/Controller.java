@@ -16,7 +16,6 @@ import java.util.Arrays;
 
 public class Controller {
 
-
     //bringing in company and employee array
     Company companyDB = new Company();
     StringBuilder str = new StringBuilder();
@@ -25,21 +24,14 @@ public class Controller {
     public static String deptName;
     public static String dateHiredStr;
     public static double annualSalary;
+    public static double hoursWorked;
     public static int role = 0;
     private int numEmployee = 0;
     private static final int MANAGER = 1;
     private static final int DEPT_HEAD = 2;
     private static final int DIRECTOR = 3;
+    private final int MAX_PT_HOURS = 100;
 
-
-    @FXML
-    private ToggleGroup ManagerType;
-
-    @FXML
-    private ToggleGroup DeptType;
-
-    @FXML
-    private ToggleGroup EmpType;
 
     @FXML
     private TextField nameFieldID;
@@ -69,12 +61,6 @@ public class Controller {
     private RadioButton ITRadioID;
 
     @FXML
-    private Button clearButtonID;
-
-    @FXML
-    private Button addButtonID;
-
-    @FXML
     private Button setHoursButton;
 
     @FXML
@@ -95,30 +81,19 @@ public class Controller {
     @FXML
     private TextArea TextAreaID;
 
+    /**
+     * Gathers and checks the selected data from the user after pressing the add button
+     * to create an employee profile in the Payroll Processing system.
+     *
+     * @param event handles the event from button click
+     */
     @FXML
     void add(ActionEvent event) {
 
         try {
             name = nameFieldID.getText();
-            //formatting the date from DatePicker
-            String temp = "";
-            StringBuilder dateFormat = new StringBuilder();
-            dateHiredStr = DateHiredID.getValue().toString(); //is formatted in yyyy-mm-dd
-
-            //converting the str yyyy-mm-dd to mm/dd/yyyy
-            String dateHiredStrArr[] = dateHiredStr.split("-"); //splitting the yyyy-mm-dd
-            temp = dateHiredStrArr[0]; //rearranging the str to the formatting we want
-            dateHiredStrArr[0] = dateHiredStrArr[1];
-            dateHiredStrArr[1] = dateHiredStrArr[2];
-            dateHiredStrArr[2] = temp;
-            String delimiter = ","; //needed in order to split the array into a string
-            dateHiredStr = Arrays.toString(dateHiredStrArr);
-
-            //takes the dateHiredStrArr and builds it into one string using strbuilder
-            for (String str: dateHiredStrArr)
-                dateFormat.append(str).append(delimiter);
-            dateHiredStr = dateFormat.substring(0, dateFormat.length()-1); //needed to get not have brackets in our final string
-            dateHiredStr = dateHiredStr.replaceAll(",", "/"); //replaces commas with the string that will be used as a delim in Date.java
+            dateHiredStr = DateHiredID.getValue().toString(); //formatted in yyyy-mm-dd
+            dateHiredStr = formatDate(dateHiredStr); //reformatting date to mm/dd/yyyy
 
             if (fullTimeRadioID.isSelected()) {
 
@@ -134,9 +109,7 @@ public class Controller {
                     deptName = ECERadioID.getText();
                     addFullTimeEmployee();
                 }
-            }
-
-            if (partTimeRadioID.isSelected()) {
+            } else if (partTimeRadioID.isSelected()) {
 
                 double hourlyPay = Double.parseDouble(rateFieldID.getText());
 
@@ -176,10 +149,21 @@ public class Controller {
             }
             str.append("Please add all employee information.");
             TextAreaID.setText(str.toString());
+        }catch (NumberFormatException e){
+            if (!TextAreaID.getText().isEmpty()) {
+                str.append("\n");
+            }
+            str.append("Please check the hours or rate value added.");
+            TextAreaID.setText(str.toString());
+
         }
+        //catch()
 
     }
 
+    /**
+     * Helper method that adds an employee of management type into the employee database.
+     */
     private void addMngmntEmployee() {
         Profile AMProfile = new Profile(name, deptName, dateHiredStr);
         Management mngmntEmp = new Management(AMProfile, annualSalary, role);
@@ -213,6 +197,11 @@ public class Controller {
         }
     }
 
+    /**
+     * Helper method that adds an employee of part-time type into the employee database.
+     *
+     * @param hourlyPay attribute needed in order to input a part-time employee
+     */
     private void addPartTimeEmployee(double hourlyPay) {
         Profile APProfile = new Profile(name, deptName, dateHiredStr);
         Parttime parttimeEmp = new Parttime(APProfile, hourlyPay);
@@ -241,6 +230,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Helper method that adds an employee of full-time type into the employee database.
+     */
     private void addFullTimeEmployee() {
         Profile AFProfile = new Profile(name, deptName, dateHiredStr);
         Fulltime fulltimeEmp = new Fulltime(AFProfile, annualSalary);
@@ -272,158 +264,254 @@ public class Controller {
         }
     }
 
+    /**
+     * Clears text fields, datepicker, and deselects all radio buttons after user clicks
+     * corresponding 'clear' button on GUI
+     *
+     * @param event handles the event from button click
+     */
     @FXML
     void clear(ActionEvent event) {
 
-        try {
+        for (int i = 0; i <= numOfElements; i++) {
 
-            for (int i = 0; i <= numOfElements; i++) {
-
-                if (!nameFieldID.getText().isEmpty())
-                    nameFieldID.clear();
-                else if (!hrsWorkedID.getText().isEmpty()) {
-                    hrsWorkedID.clear();
-                } else if (!DateHiredID.getEditor().getText().isEmpty()) {
-                    DateHiredID.getEditor().clear();
-                } else if (!rateFieldID.getText().isEmpty()) {
-                    rateFieldID.clear();
-                } else if (!salaryFieldID.getText().isEmpty()) {
-                    salaryFieldID.clear();
-                }
-
-                if (ManagerType.getSelectedToggle().isSelected()) {
-                    managerRadioID.setSelected(false);
-                    deptHeadRadioID.setSelected(false);
-                    directorRadioID.setSelected(false);
-
-                } else if (DeptType.getSelectedToggle().isSelected()) {
-                    ITRadioID.setSelected(false);
-                    CSRadioID.setSelected(false);
-                    ECERadioID.setSelected(false);
-
-                } else if (EmpType.getSelectedToggle().isSelected()) { //not deselecting for some reason in each group
-                    partTimeRadioID.setSelected(false);
-                    fullTimeRadioID.setSelected(false);
-                    managementRadioID.setSelected(false);
-                }
+            //clear text fields and datepicker
+            if (!nameFieldID.getText().isEmpty())
+                nameFieldID.clear();
+            else if (!hrsWorkedID.getText().isEmpty()) {
+                hrsWorkedID.clear();
+            } else if (!DateHiredID.getEditor().getText().isEmpty()) {
+                DateHiredID.getEditor().clear();
+            } else if (!rateFieldID.getText().isEmpty()) {
+                rateFieldID.clear();
+            } else if (!salaryFieldID.getText().isEmpty()) {
+                salaryFieldID.clear();
             }
-        }
-        catch (NullPointerException e) {
-            if (!TextAreaID.getText().isEmpty()) {
-                str.append("\n");
+            //deselect radio buttons
+            else if (managerRadioID.isSelected()) {
+                managerRadioID.setSelected(false);
+            } else if (deptHeadRadioID.isSelected()) {
+                deptHeadRadioID.setSelected(false);
+            } else if (directorRadioID.isSelected()) {
+                directorRadioID.setSelected(false);
+            } else if (ITRadioID.isSelected()) {
+                ITRadioID.setSelected(false);
+            } else if (CSRadioID.isSelected()) {
+                CSRadioID.setSelected(false);
+            } else if (ECERadioID.isSelected()) {
+                ECERadioID.setSelected(false);
+            } else if (partTimeRadioID.isSelected()) {
+                partTimeRadioID.setSelected(false);
+            } else if (fullTimeRadioID.isSelected()) {
+                fullTimeRadioID.setSelected(false);
+            } else if (managementRadioID.isSelected()) {
+                managementRadioID.setSelected(false);
             }
-            str.append("There is nothing to clear. Please add information.");
-            TextAreaID.setText(str.toString());
+
         }
     }
-
     /**
      * Prints employee database
-     * @param event is the creates when user clicks on Print All Employees button
+     * @param event handles the event for Print All Employees button
      */
-
     @FXML
     void printAll(ActionEvent event) {
-       str.append(companyDB.print());
+        str.append(companyDB.print());
+        str.append("\n");
         if (!TextAreaID.getText().isEmpty()) {
             str.append("\n");
         }
         TextAreaID.setText(str.toString());
     }
-
     /**
      * Prints employee database by the dates they were hired on.
-     * @param event is created when the user clicks on Print By Date button
+     * @param event handles event for Print By Date button
      */
     @FXML
     void printByDate(ActionEvent event) {
         str.append(companyDB.printByDate());
+        str.append("\n");
         if (!TextAreaID.getText().isEmpty()) {
             str.append("\n");
         }
         TextAreaID.setText(str.toString());
-
     }
-
     /**
      * Prints employee database by the department they work in.
-     * @param event is created when the user clicks on Print by Date button.
+     * @param event handles event for Print by Date button.
      */
     @FXML
     void printByDept(ActionEvent event) {
         str.append(companyDB.printByDepartment());
+        str.append("\n");
         if (!TextAreaID.getText().isEmpty()) {
             str.append("\n");
         }
         TextAreaID.setText(str.toString());
+
+
     }
 
     /**
+     * Helper method in order to format date from yyyy-mm-dd to mm/dd/yyyy
+     * to ensure proper passing of a String date into Date.java
+     *
+     * @param date attribute of String before formatting
+     * @return formatted String for creating employee profile
+     */
+    private String formatDate(String date) {
+        String temp = "";
+        StringBuilder dateFormat = new StringBuilder();
+        dateHiredStr = DateHiredID.getValue().toString(); //is formatted in yyyy-mm-dd
+
+        //converting the str yyyy-mm-dd to mm/dd/yyyy
+        String dateHiredStrArr[] = dateHiredStr.split("-"); //splitting the yyyy-mm-dd
+        temp = dateHiredStrArr[0]; //rearranging the str to the formatting we want
+        dateHiredStrArr[0] = dateHiredStrArr[1];
+        dateHiredStrArr[1] = dateHiredStrArr[2];
+        dateHiredStrArr[2] = temp;
+        String delimiter = ","; //needed in order to split the array into a string
+        dateHiredStr = Arrays.toString(dateHiredStrArr);
+
+        //takes the dateHiredStrArr and builds it into one string using strbuilder
+        for (String str : dateHiredStrArr)
+            dateFormat.append(str).append(delimiter);
+        dateHiredStr = dateFormat.substring(0, dateFormat.length() - 1); //needed to get not have brackets in our final string
+        dateHiredStr = dateHiredStr.replaceAll(",", "/"); //replaces commas with the string that will be used as a delim in Date.java
+
+        return dateHiredStr;
+    }
+    /**
      * Removes employees from the database.
-     * @param event is created when the user clicks on remove button
+     * @param event handles event for remove button
      */
     @FXML
     void remove(ActionEvent event) {
 
-        try{
+        try {
             name = nameFieldID.getText();
             dateHiredStr = DateHiredID.getValue().toString();
+            dateHiredStr = formatDate(dateHiredStr);
+
             numEmployee = companyDB.getNumEmployee();
-            if(CSRadioID.isSelected()){
+            if (CSRadioID.isSelected()) {
                 deptName = CSRadioID.getText();
-            }else if(ITRadioID.isSelected()){
+            } else if (ITRadioID.isSelected()) {
                 deptName = ITRadioID.getText();
-            }else if(ECERadioID.isSelected()){
+            } else if (ECERadioID.isSelected()) {
                 deptName = ECERadioID.getText();
             }
+
             Profile RProfile = new Profile(name, deptName, dateHiredStr);
             Employee removeEmp = new Employee(RProfile);
-            if(companyDB.remove(removeEmp)){
-                if(!TextAreaID.getText().isEmpty()) {
+            if (companyDB.remove(removeEmp)) {
+                if (!TextAreaID.getText().isEmpty()) {
                     str.append("\n");
                 }
                 str.append("Employee removed");
-            }else if(numEmployee == 0){
-                if(!TextAreaID.getText().isEmpty()) {
+            } else if (numEmployee == 0) {
+                if (!TextAreaID.getText().isEmpty()) {
                     str.append("\n");
                 }
                 str.append("Employee database is empty");
-            }else{
-                if(!TextAreaID.getText().isEmpty()) {
+            } else {
+                if (!TextAreaID.getText().isEmpty()) {
                     str.append("\n");
                 }
                 str.append("Employee does not exist");
             }
             TextAreaID.setText(str.toString());
 
-        }catch(NullPointerException e){
+        } catch (NullPointerException e) {
             if (!TextAreaID.getText().isEmpty()) {
+
                 str.append("\n");
             }
             str.append("Please add all employee information to remove.");
             TextAreaID.setText(str.toString());
         }
-
     }
 
+    /**
+     * Gathers and checks the selected data from GUI in order to Set Hours for a part-time employee
+     * after clicking Set Hours button. Creates temporary Parttime employee to verify they exist in employee database.
+     *
+     * @param event handles the event from button click
+     */
+    @FXML
+    void setHours(ActionEvent event) {
 
+        try {
+            name = nameFieldID.getText();
+            dateHiredStr = formatDate(dateHiredStr);  //yyyy-mm-dd --> mm-dd-yyyy
+            hoursWorked = Double.parseDouble(hrsWorkedID.getText());
+
+            if (CSRadioID.isSelected()) {
+                deptName = CSRadioID.getText();
+            } else if (ITRadioID.isSelected()) {
+                deptName = ITRadioID.getText();
+            } else if (ECERadioID.isSelected()) {
+                deptName = ECERadioID.getText();
+            }
+
+            Profile setHrsProfile = new Profile(name, deptName, dateHiredStr);
+            Parttime setHrsEmp = new Parttime(setHrsProfile);
+            numEmployee = companyDB.getNumEmployee();
+            setHrsEmp.setHours(hoursWorked);
+
+            if (numEmployee == 0) {
+                if (!TextAreaID.getText().isEmpty()) {
+                    str.append("\n");
+                }
+                str.append("Employee database is empty.");
+            } else if (hoursWorked < 0) {
+                str.append("\n");
+                str.append("Working hours cannot be negative.");
+            } else if (hoursWorked > MAX_PT_HOURS) {
+                str.append("\n");
+                str.append("Invalid hours: over 100.");
+            } else if (setHrsProfile.getDateHired().isValid()) {
+                if (companyDB.setHours(setHrsEmp)) {
+                    str.append("\n");
+                    str.append("Working hours set.");
+                } else {
+                    str.append("\n");
+                    str.append("Employee does not exist.");
+                }
+            }
+            TextAreaID.setText(str.toString());
+        } catch (NumberFormatException e) {
+            str.append("\n");
+            str.append("Please enter the hours worked.");
+            TextAreaID.setText(str.toString());
+        } catch (ArrayIndexOutOfBoundsException e) {
+            str.append("\n");
+            str.append("Please enter all the employee's information and make sure it is correct.");
+            TextAreaID.setText(str.toString());
+
+        }
+
+
+    }
     /**
      * Imports a .txt file selected by the user.
-     * @param event is created when the user clicks on import.
+     * @param event handles the event for import
      */
     @FXML
     void importDB(ActionEvent event) {
-        FileChooser chooser = new FileChooser();
-        chooser.setTitle("Open Source File for the import"); //check this print statement
-        chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"),
-                new FileChooser.ExtensionFilter("All Files", "*.*"));
-        Stage stage = new Stage();
-        File sourceFile = chooser.showOpenDialog(stage);
-        String filePath = sourceFile.getAbsolutePath();
-        String fileName = sourceFile.getName();
-        String command = "";
 
         try {
+            FileChooser chooser = new FileChooser();
+            chooser.setTitle("Open Source File for the import"); //check this print statement
+            chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"),
+                    new FileChooser.ExtensionFilter("All Files", "*.*"));
+            Stage stage = new Stage();
+            File sourceFile = chooser.showOpenDialog(stage);
+            String filePath = sourceFile.getAbsolutePath();
+            String fileName = sourceFile.getName();
+            String command = "";
+
+
             File dbName = new File(filePath);
             Scanner readFile = new Scanner(dbName);
             while (readFile.hasNextLine()) {
@@ -460,7 +548,7 @@ public class Controller {
                         companyDB.add(mngmntEmp);
                 }
             }
-            if(!TextAreaID.getText().isEmpty()){
+            if (!TextAreaID.getText().isEmpty()) {
                 str.append("\n");
             }
             str.append(fileName + " imported");
@@ -470,21 +558,20 @@ public class Controller {
         } catch (FileNotFoundException e) {
             str.append(e.getMessage());
             e.printStackTrace();
-        }
-        catch (NullPointerException e) {
+
+        } catch (NullPointerException e) {
             if (!TextAreaID.getText().isEmpty()) {
                 str.append("\n");
             }
-            str.append("No import file selected");
+            str.append("No import file selected.");
             TextAreaID.setText(str.toString());
         }
 
 
     }
-
     /**
      * Exports the file that the user has selected with all the information in the employee database.
-     * @param event is created when the user clicks on Export
+     * @param event handles event for Export
      * @throws FileNotFoundException error when the file selected by user is not found.
      * @throws UnsupportedEncodingException error when character encoding is not supported.
      */
@@ -492,22 +579,21 @@ public class Controller {
     void exportDB(ActionEvent event) throws FileNotFoundException, UnsupportedEncodingException {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Open Source File for the import"); //check this statement.
-        chooser.getExtensionFilters().addAll(new ExtensionFilter("Text Files","*.txt"),
+        chooser.getExtensionFilters().addAll(new ExtensionFilter("Text Files", "*.txt"),
                 new ExtensionFilter("All Files", "*.*"));
         Stage stage = new Stage();
-        try{
-            File targetFile =  chooser.showSaveDialog(stage);
+        try {
+            File targetFile = chooser.showSaveDialog(stage);
             String targetPath = targetFile.getAbsolutePath();
             String targetName = targetFile.getName();
             companyDB.exportDatabase(targetPath);
-            if(!TextAreaID.getText().isEmpty()){
+            if (!TextAreaID.getText().isEmpty()) {
                 str.append("\n");
             }
             str.append(targetName + " exported");
             TextAreaID.setText(str.toString());
 
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             if (!TextAreaID.getText().isEmpty()) {
                 str.append("\n");
             }
@@ -517,8 +603,34 @@ public class Controller {
     }
 
     /**
-     * Sets the role to 1
-     * @param event is created when the user clicks on manager radio button
+     * Calls the processPayments() method from Company to calculate payments for all employees
+     *
+     * @param event handles the event from button click
+     */
+    @FXML
+    void calculate(ActionEvent event) {
+        numEmployee = companyDB.getNumEmployee();
+        if (numEmployee == 0) {
+            if (!TextAreaID.getText().isEmpty()) {
+                str.append("\n");
+            }
+            str.append("Employee database is empty");
+            TextAreaID.setText(str.toString());
+        } else {
+            companyDB.processPayments();
+            if (!TextAreaID.getText().isEmpty()) {
+                str.append("\n");
+            }
+            str.append("Calculation of employees payments is done.");
+            TextAreaID.setText(str.toString());
+        }
+    }
+
+
+    /**
+     * Sets the role as manager for management employee to add profile correctly
+     *
+     * @param event handles the event from mouse click on radio button
      */
     @FXML
     void setManager(MouseEvent event) {
@@ -526,8 +638,9 @@ public class Controller {
     }
 
     /**
-     * Sets the role to 2
-     * @param event is created when the user clicks on department head radio button
+     * Sets the role as department head for management employee to add profile correctly
+     *
+     * @param event handles the event from mouse click on radio button
      */
     @FXML
     void setDepartmentHead(MouseEvent event) {
@@ -535,8 +648,9 @@ public class Controller {
     }
 
     /**
-     * Sets role to 3
-     * @param event is created when the user clicks on director radio button
+     * Sets the role as director for management employee to add profile correctly
+     *
+     * @param event handles the event from mouse click on radio button
      */
     @FXML
     void setDirector(MouseEvent event) {
@@ -545,28 +659,32 @@ public class Controller {
 
 
     /**
-     * Disables the text area and radio button when full time role is selected
-     * @param event is created when the user clicks on full time radio button
+     * Disables unnecessary functions when user clicks Full Time radio button on GUI
+     *
+     * @param event handles the event from mouse click on radio button
      */
     @FXML
     void setFullTime(MouseEvent event) {
+
         hrsWorkedID.setDisable(true);
         rateFieldID.setDisable(true);
         setHoursButton.setDisable(true);
         managementRadioID.setDisable(false);
-
         directorRadioID.setDisable(true);
         deptHeadRadioID.setDisable(true);
         managerRadioID.setDisable(true);
         salaryFieldID.setDisable(false);
+
     }
 
     /**
-     * Disables the text area and radio button when the management role is selected.
-     * @param event is created when the user selects management role
+     * Disables unnecessary functions when user clicks Full Time radio button on GUI
+     *
+     * @param event handles the event from mouse click on radio button
      */
     @FXML
     void setManagement(MouseEvent event) {
+
         rateFieldID.setDisable(true);
         hrsWorkedID.setDisable(true);
         setHoursButton.setDisable(true);
@@ -579,11 +697,13 @@ public class Controller {
     }
 
     /**
-     * Disables the text area and radio button when the part time role is selected.
-     * @param event is created when the user selects part time role.
+     * Disables unnecessary functions when user clicks Part Time radio button on GUI
+     *
+     * @param event handles the event from mouse click on radio button
      */
     @FXML
     void setPartTime(MouseEvent event) {
+
         rateFieldID.setDisable(false);
         hrsWorkedID.setDisable(false);
         setHoursButton.setDisable(false);
@@ -594,5 +714,5 @@ public class Controller {
         salaryFieldID.setDisable(true);
 
     }
-}
 
+}
