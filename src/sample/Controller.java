@@ -1,33 +1,22 @@
 package PayrollProcessingApp;
 
 import PayrollProcessing.*;
-import com.sun.javafx.binding.StringFormatter;
-import com.sun.media.jfxmediaimpl.platform.Platform;
-import javafx.css.converter.StringConverter;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Scanner;
-import java.util.regex.Matcher;
 
-//<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PayrollProcessingApp.Controller">
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
+import java.io.UnsupportedEncodingException;
+import java.util.Scanner;
+import java.io.FileNotFoundException;
+import java.util.Arrays;
 
 public class Controller {
-
 
     //bringing in company and employee array
     Company companyDB = new Company();
@@ -37,11 +26,14 @@ public class Controller {
     public static String deptName;
     public static String dateHiredStr;
     public static double annualSalary;
+    public static double hoursWorked;
     public static int role = 0;
+    private int numEmployee = 0;
+    private static final int MANAGER = 1;
+    private static final int DEPT_HEAD = 2;
+    private static final int DIRECTOR = 3;
+    private final int MAX_PT_HOURS = 100;
 
-
-    @FXML
-    private GridPane gridPaneTab1;
 
     @FXML
     private ToggleGroup ManagerType;
@@ -80,15 +72,6 @@ public class Controller {
     private RadioButton ITRadioID;
 
     @FXML
-    private Button clearButtonID;
-
-    @FXML
-    private Button addButtonID;
-
-    @FXML
-    private Button removeButtonID;
-
-    @FXML
     private Button setHoursButton;
 
     @FXML
@@ -107,56 +90,23 @@ public class Controller {
     private RadioButton directorRadioID;
 
     @FXML
-    private Button printDeptID;
-
-    @FXML
-    private Button printDateID;
-
-    @FXML
-    private Button printAllID;
-
-    @FXML
-    private MenuBar menuBarDBID;
-
-    @FXML
-    private MenuItem closeButtonID;
-
-    @FXML
-    private MenuItem importButtonID;
-
-    @FXML
-    private MenuItem exportButtonID;
-
-    @FXML
     private TextArea TextAreaID;
 
-
+    /**
+     * Gathers and checks the selected data from the user after they press the add button
+     * to create an employee profile in the Payroll Processing system.
+     *
+     * @param event handles the event from button click
+     */
     @FXML
     void add(ActionEvent event) {
 
         try {
             name = nameFieldID.getText();
-
-            //formatting the date from DatePicker
-            String temp = "";
-            StringBuilder dateFormat = new StringBuilder();
-            dateHiredStr = DateHiredID.getValue().toString(); //is formatted in yyyy-mm-dd
-
-            //converting the str yyyy-mm-dd to mm/dd/yyyy
-            String dateHiredStrArr[] = dateHiredStr.split("-"); //splitting the yyyy-mm-dd
-            temp = dateHiredStrArr[0]; //rearranging the str to the formatting we want
-            dateHiredStrArr[0] = dateHiredStrArr[1];
-            dateHiredStrArr[1] = dateHiredStrArr[2];
-            dateHiredStrArr[2] = temp;
-            String delimiter = ","; //needed in order to split the array into a string
-            dateHiredStr = Arrays.toString(dateHiredStrArr);
+            dateHiredStr = DateHiredID.getValue().toString(); //formatted in yyyy-mm-dd
             System.out.println(dateHiredStr);
 
-            //takes the dateHiredStrArr and builds it into one string using strbuilder
-            for (String str: dateHiredStrArr)
-                dateFormat.append(str).append(delimiter);
-                dateHiredStr = dateFormat.substring(0, dateFormat.length()-1); //needed to get not have brackets in our final string
-            dateHiredStr = dateHiredStr.replaceAll(",", "/"); //replaces commas with the string that will be used as a delim in Date.java
+            dateHiredStr = formatDate(dateHiredStr); //reformatting date to mm/dd/yyyy
 
 
             if (fullTimeRadioID.isSelected()) {
@@ -175,7 +125,7 @@ public class Controller {
                 }
             }
 
-            if (partTimeRadioID.isSelected()) {
+            else if (partTimeRadioID.isSelected()) {
 
                 double hourlyPay = Double.parseDouble(rateFieldID.getText());
 
@@ -219,6 +169,9 @@ public class Controller {
 
     }
 
+    /**
+     * Helper method that adds an employee of management type into the employee database.
+     */
     private void addMngmntEmployee() {
         Profile AMProfile = new Profile(name, deptName, dateHiredStr);
         Management mngmntEmp = new Management(AMProfile, annualSalary, role);
@@ -252,14 +205,15 @@ public class Controller {
         }
     }
 
+    /**
+     * Helper method that adds an employee of part-time type into the employee database.
+     * @param hourlyPay attribute needed in order to input a part-time employee
+     */
     private void addPartTimeEmployee(double hourlyPay) {
         Profile APProfile = new Profile(name, deptName, dateHiredStr);
         Parttime parttimeEmp = new Parttime(APProfile, hourlyPay);
         if (hourlyPay < 0) {
         } else if (APProfile.getDateHired().isValid()) {
-            if (!hrsWorkedID.getText().isEmpty()) {
-                //add the employee
-            }
             if (companyDB.add(parttimeEmp)) {
                 if (!TextAreaID.getText().isEmpty()) {
                     str.append("\n");
@@ -283,6 +237,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Helper method that adds an employee of full-time type into the employee database.
+     */
     private void addFullTimeEmployee() {
         Profile AFProfile = new Profile(name, deptName, dateHiredStr);
         Fulltime fulltimeEmp = new Fulltime(AFProfile, annualSalary);
@@ -314,7 +271,10 @@ public class Controller {
         }
     }
 
-    //fix the clear method
+    /**
+     *
+     * @param event
+     */
     @FXML
     void clear(ActionEvent event) {
 
@@ -350,8 +310,7 @@ public class Controller {
                     managementRadioID.setSelected(false);
                 }
             }
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             if (!TextAreaID.getText().isEmpty()) {
                 str.append("\n");
             }
@@ -362,61 +321,198 @@ public class Controller {
 
     @FXML
     void printAll(ActionEvent event) {
+        str.append(companyDB.print());
+        if (!TextAreaID.getText().isEmpty()) {
+            str.append("\n");
+        }
+        TextAreaID.setText(str.toString());
 
     }
 
     @FXML
     void printByDate(ActionEvent event) {
+        str.append(companyDB.printByDate());
+        if (!TextAreaID.getText().isEmpty()) {
+            str.append("\n");
+        }
+        TextAreaID.setText(str.toString());
 
     }
 
     @FXML
     void printByDept(ActionEvent event) {
+        str.append(companyDB.printByDepartment());
+        if (!TextAreaID.getText().isEmpty()) {
+            str.append("\n");
+        }
+        TextAreaID.setText(str.toString());
 
+
+    }
+
+    /**
+     * Helper method in order to format date from yyyy-mm-dd to mm/dd/yyyy
+     * to ensure proper passing of a String date into Date.java
+     *
+     * @param date  attribute of String before formatting
+     * @return      formatted String for creating employee profile
+     */
+    private String formatDate(String date) {
+        String temp = "";
+        StringBuilder dateFormat = new StringBuilder();
+        dateHiredStr = DateHiredID.getValue().toString(); //is formatted in yyyy-mm-dd
+
+        //converting the str yyyy-mm-dd to mm/dd/yyyy
+        String dateHiredStrArr[] = dateHiredStr.split("-"); //splitting the yyyy-mm-dd
+        temp = dateHiredStrArr[0]; //rearranging the str to the formatting we want
+        dateHiredStrArr[0] = dateHiredStrArr[1];
+        dateHiredStrArr[1] = dateHiredStrArr[2];
+        dateHiredStrArr[2] = temp;
+        String delimiter = ","; //needed in order to split the array into a string
+        dateHiredStr = Arrays.toString(dateHiredStrArr);
+
+        //takes the dateHiredStrArr and builds it into one string using strbuilder
+        for (String str : dateHiredStrArr)
+            dateFormat.append(str).append(delimiter);
+        dateHiredStr = dateFormat.substring(0, dateFormat.length() - 1); //needed to get not have brackets in our final string
+        dateHiredStr = dateHiredStr.replaceAll(",", "/"); //replaces commas with the string that will be used as a delim in Date.java
+
+        return dateHiredStr;
     }
 
     @FXML
     void remove(ActionEvent event) {
 
+        try {
+            name = nameFieldID.getText();
+            dateHiredStr = DateHiredID.getValue().toString();
+            dateHiredStr = formatDate(dateHiredStr);
+
+            numEmployee = companyDB.getNumEmployee();
+            if (CSRadioID.isSelected()) {
+                deptName = CSRadioID.getText();
+            } else if (ITRadioID.isSelected()) {
+                deptName = ITRadioID.getText();
+            } else if (ECERadioID.isSelected()) {
+                deptName = ECERadioID.getText();
+            }
+
+            Profile RProfile = new Profile(name, deptName, dateHiredStr);
+            Employee removeEmp = new Employee(RProfile);
+            if (companyDB.remove(removeEmp)) {
+                if (!TextAreaID.getText().isEmpty()) {
+                    str.append("\n");
+                }
+                str.append("Employee removed");
+            } else if (numEmployee == 0) {
+                if (!TextAreaID.getText().isEmpty()) {
+                    str.append("\n");
+                }
+                str.append("Employee database is empty");
+            } else {
+                if (!TextAreaID.getText().isEmpty()) {
+                    str.append("\n");
+                }
+                str.append("Employee does not exist");
+            }
+            TextAreaID.setText(str.toString());
+
+        } catch (NullPointerException e) {
+            if (!TextAreaID.getText().isEmpty()) {
+
+                str.append("\n");
+            }
+            str.append("Please add all employee information to remove.");
+            TextAreaID.setText(str.toString());
+        }
+
     }
 
+    /**
+     * Gathers and checks the selected data from GUI in order to Set Hours for a part-time employee
+     * after pressing Set Hours button. Creates temporary Parttime employee to verify they exist in employee database.
+     *
+     * @param event handles the event from button click
+     */
     @FXML
     void setHours(ActionEvent event) {
 
-    }
+        try {
+            name = nameFieldID.getText();
+            dateHiredStr = formatDate(dateHiredStr);  //yyyy-mm-dd --> mm-dd-yyyy
+            hoursWorked = Double.parseDouble(hrsWorkedID.getText());
 
-    @FXML
-    void setCS(MouseEvent event) {
+            if (CSRadioID.isSelected()) {
+                deptName = CSRadioID.getText();
+            } else if (ITRadioID.isSelected()) {
+                deptName = ITRadioID.getText();
+            } else if (ECERadioID.isSelected()) {
+                deptName = ECERadioID.getText();
+            }
 
-    }
+            Profile setHrsProfile = new Profile(name, deptName, dateHiredStr);
+            Parttime setHrsEmp = new Parttime(setHrsProfile);
+            numEmployee = companyDB.getNumEmployee();
+            setHrsEmp.setHours(hoursWorked);
 
-    @FXML
-    void close(ActionEvent event) {
+            if (numEmployee == 0) {
+                if (!TextAreaID.getText().isEmpty()) {
+                    str.append("\n");
+                }
+                str.append("Employee database is empty.");
+            } else if (hoursWorked < 0) {
+                str.append("\n");
+                str.append("Working hours cannot be negative.");
+            } else if (hoursWorked > MAX_PT_HOURS) {
+                str.append("\n");
+                str.append("Invalid hours: over 100.");
+            } else if (setHrsProfile.getDateHired().isValid()) {
+                if (companyDB.setHours(setHrsEmp)) {
+                    str.append("\n");
+                    str.append("Working hours set.");
+                } else {
+                    str.append("\n");
+                    str.append("Employee does not exist.");
+                }
+            }
+            TextAreaID.setText(str.toString());
+        } catch (NumberFormatException e) {
+            str.append("\n");
+            str.append("Please enter the hours worked.");
+            TextAreaID.setText(str.toString());
+        }
+
+        catch (ArrayIndexOutOfBoundsException e) {
+            str.append("\n");
+            str.append("Please enter all the employee's information and make sure it is correct.");
+            TextAreaID.setText(str.toString());
+
+        }
 
 
     }
 
     @FXML
     void importDB(ActionEvent event) {
+
+        try {
         FileChooser chooser = new FileChooser();
-        Label newLabel = new Label();
-        chooser.setTitle("Open Source File for the import");
+        chooser.setTitle("Open Source File for the import"); //check this print statement
         chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"),
                 new FileChooser.ExtensionFilter("All Files", "*.*"));
         Stage stage = new Stage();
         File sourceFile = chooser.showOpenDialog(stage);
-        String fileName = sourceFile.getAbsolutePath();
+        String filePath = sourceFile.getAbsolutePath();
+        String fileName = sourceFile.getName();
         String command = "";
-        //System.out.println("the file path  is "+ fileName);
 
-        try {
-            File dbName = new File(fileName);
+
+            File dbName = new File(filePath);
             Scanner readFile = new Scanner(dbName);
             while (readFile.hasNextLine()) {
                 String data = readFile.nextLine();
                 String[] arrOfStr = data.split(",");
                 command = arrOfStr[0];
-                // System.out.println("Command is:"+ command);
                 switch (command) {
                     case "P": //handling command add for parttime
                         name = arrOfStr[1];
@@ -446,22 +542,23 @@ public class Controller {
                         Management mngmntEmp = new Management(AMProfile, annualSalary, role);
                         companyDB.add(mngmntEmp);
                 }
-                //System.out.println("The company db is");
-
-                //System.out.println("the line in the file is:"+data);
             }
-            //companyDB.print();
-            readFile.close();
-
-        } catch (FileNotFoundException e) {
-            System.out.println("The error message is" + e.getMessage());
-            e.printStackTrace();
-        }
-            catch (NullPointerException e) {
             if (!TextAreaID.getText().isEmpty()) {
                 str.append("\n");
             }
-            str.append("No import file selected");
+            str.append(fileName + " imported");
+            TextAreaID.setText(str.toString());
+            readFile.close();
+
+        } catch (FileNotFoundException e) {
+            str.append(e.getMessage());
+            e.printStackTrace();
+
+        } catch (NullPointerException e) {
+            if (!TextAreaID.getText().isEmpty()) {
+                str.append("\n");
+            }
+            str.append("No import file selected.");
             TextAreaID.setText(str.toString());
         }
 
@@ -469,43 +566,94 @@ public class Controller {
     }
 
     @FXML
-    void exportDB(ActionEvent event) {
+    void exportDB(ActionEvent event) throws FileNotFoundException, UnsupportedEncodingException {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Open Source File for the import"); //check this statement.
+        chooser.getExtensionFilters().addAll(new ExtensionFilter("Text Files", "*.txt"),
+                new ExtensionFilter("All Files", "*.*"));
+        Stage stage = new Stage();
+        try {
+            File targetFile = chooser.showSaveDialog(stage);
+            String targetPath = targetFile.getAbsolutePath();
+            String targetName = targetFile.getName();
+            companyDB.exportDatabase(targetPath);
+            if (!TextAreaID.getText().isEmpty()) {
+                str.append("\n");
+            }
+            str.append(targetName + " exported");
+            TextAreaID.setText(str.toString());
 
-
+        } catch (NullPointerException e) {
+            if (!TextAreaID.getText().isEmpty()) {
+                str.append("\n");
+            }
+            str.append("No export file selected");
+            TextAreaID.setText(str.toString());
+        }
     }
 
-
+    /**
+     * Calls the processPayments() method from Company to calculate payments for all employees
+     *
+     * @param event handles the event from button click
+     */
     @FXML
-    void setDate(MouseEvent event) {
-
+    void calculate(ActionEvent event) {
+        numEmployee = companyDB.getNumEmployee();
+        if (numEmployee == 0) {
+            if (!TextAreaID.getText().isEmpty()) {
+                str.append("\n");
+            }
+            str.append("Employee database is empty");
+            TextAreaID.setText(str.toString());
+        }
+        else {
+            companyDB.processPayments();
+            if (!TextAreaID.getText().isEmpty()) {
+                str.append("\n");
+            }
+            str.append("Calculation of employees is done.");
+            TextAreaID.setText(str.toString());
+        }
     }
 
+
+    /**
+     * Sets the role as manager for management employee to add profile correctly
+     *
+     * @param event handles the event from mouse click on radio button
+     */
     @FXML
     void setManager(MouseEvent event) {
-
-        role = 1;
-
+        role = MANAGER;
     }
 
+    /**
+     * Sets the role as department head for management employee to add profile correctly
+     *
+     * @param event handles the event from mouse click on radio button
+     */
     @FXML
     void setDepartmentHead(MouseEvent event) {
-
-
-        role = 2;
+        role = DEPT_HEAD;
     }
 
+    /**
+     * Sets the role as director for management employee to add profile correctly
+     *
+     * @param event handles the event from mouse click on radio button
+     */
     @FXML
     void setDirector(MouseEvent event) {
-
-        role = 3;
-    }
-
-    @FXML
-    void setECE(MouseEvent event) {
-
+        role = DIRECTOR;
     }
 
 
+    /**
+     * Disables unnecessary functions when user presses Full Time radio button on GUI
+     *
+     * @param event handles the event from mouse click on radio button
+     */
     @FXML
     void setFullTime(MouseEvent event) {
 
@@ -513,7 +661,6 @@ public class Controller {
         rateFieldID.setDisable(true);
         setHoursButton.setDisable(true);
         managementRadioID.setDisable(false);
-
         directorRadioID.setDisable(true);
         deptHeadRadioID.setDisable(true);
         managerRadioID.setDisable(true);
@@ -521,14 +668,13 @@ public class Controller {
 
     }
 
-    @FXML
-    void setIT(MouseEvent event) {
-
-    }
-
+    /**
+     * Disables unnecessary functions when user presses Full Time radio button on GUI
+     *
+     * @param event handles the event from mouse click on radio button
+     */
     @FXML
     void setManagement(MouseEvent event) {
-
 
         rateFieldID.setDisable(true);
         hrsWorkedID.setDisable(true);
@@ -541,7 +687,11 @@ public class Controller {
 
     }
 
-
+    /**
+     * Disables unnecessary functions when user presses Part Time radio button on GUI
+     *
+     * @param event handles the event from mouse click on radio button
+     */
     @FXML
     void setPartTime(MouseEvent event) {
 
@@ -556,7 +706,5 @@ public class Controller {
 
     }
 
-
 }
-
 

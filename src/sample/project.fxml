@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright (c) 2015, 2019, Gluon and/or its affiliates.
+  All rights reserved. Use is subject to license terms.
+
+  This file is available and licensed under the following license:
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions
+  are met:
+
+  - Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+  - Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in
+    the documentation and/or other materials provided with the distribution.
+  - Neither the name of Oracle Corporation nor the names of its
+    contributors may be used to endorse or promote products derived
+    from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PayrollProcessingApp.Controller">
+    <top>
+        <TabPane prefHeight="286.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+            <tabs>
+                <Tab text="Employee Management">
+                    <content>
+                        <GridPane fx:id="gridPaneTab1" alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="242.0" prefWidth="568.0">
+                            <columnConstraints>
+                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="423.8" minWidth="10.0" prefWidth="351.0" />
+                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="378.9999633789063" minWidth="10.0" prefWidth="147.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints maxHeight="56.80000381469726" minHeight="9.600014114379881" prefHeight="22.99998779296875" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="51.199985885620116" minHeight="4.7999961853027315" prefHeight="27.600006103515618" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="60.80000000000001" minHeight="10.0" prefHeight="27.800006103515635" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="49.40000610351562" minHeight="0.0" prefHeight="35.79999389648438" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="41.400000000000006" minHeight="10.0" prefHeight="31.800006103515614" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="41.399987792968744" minHeight="10.0" prefHeight="34.99999389648437" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="43.00001525878906" minHeight="10.0" prefHeight="30.399987792968744" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="32.00000610351563" minHeight="10.0" prefHeight="25.600012207031256" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                            <children>
+                                <Label text="Name" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                    <padding>
+                                        <Insets left="10.0" />
+                                    </padding>
+                                </Label>
+                                <TextField fx:id="nameFieldID" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="23.0" prefWidth="100.0" promptText="Enter Name" GridPane.rowIndex="1">
+                                    <opaqueInsets>
+                                        <Insets />
+                                    </opaqueInsets>
+                                    <GridPane.margin>
+                                        <Insets left="70.0" />
+                                    </GridPane.margin>
+                                    <font>
+                                        <Font size="10.0" />
+                                    </font>
+                                </TextField>
+                                <Label text="Payroll Processing" GridPane.halignment="CENTER">
+                                    <GridPane.margin>
+                                        <Insets left="20.0" />
+                                    </GridPane.margin>
+                                </Label>
+                                <DatePicker fx:id="DateHiredID" editable="false" promptText="Pick Date" GridPane.halignment="LEFT" GridPane.rowIndex="3">
+                                    <GridPane.margin>
+                                        <Insets left="80.0" />
+                                    </GridPane.margin>
+                                </DatePicker>
+                                <RadioButton fx:id="fullTimeRadioID" layoutX="10.0" layoutY="143.0" mnemonicParsing="false" onMouseClicked="#setFullTime" text="Full Time" GridPane.rowIndex="4">
+                                    <padding>
+                                        <Insets left="5.0" />
+                                    </padding>
+                                    <toggleGroup>
+                                        <ToggleGroup fx:id="EmpType" />
+                                    </toggleGroup>
+                                </RadioButton>
+                                <RadioButton fx:id="managementRadioID" layoutX="110.0" layoutY="143.0" mnemonicParsing="false" onMouseClicked="#setManagement" text="Management" toggleGroup="$EmpType" GridPane.rowIndex="4">
+                                    <GridPane.margin>
+                                        <Insets left="200.0" />
+                                    </GridPane.margin>
+                                </RadioButton>
+                                <RadioButton fx:id="partTimeRadioID" layoutX="210.0" layoutY="143.0" mnemonicParsing="false" onMouseClicked="#setPartTime" text="Part Time" toggleGroup="$EmpType" GridPane.rowIndex="4">
+                                    <GridPane.margin>
+                                        <Insets left="100.0" />
+                                    </GridPane.margin>
+                                </RadioButton>
+                                <TextField fx:id="salaryFieldID" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="21.0" prefWidth="83.0" promptText="Enter Salary" GridPane.halignment="LEFT" GridPane.rowIndex="5">
+                                    <GridPane.margin>
+                                        <Insets left="100.0" />
+                                    </GridPane.margin>
+                                    <font>
+                                        <Font size="10.0" />
+                                    </font>
+                                </TextField>
+                                <Label text="Annual Salary" GridPane.halignment="LEFT" GridPane.rowIndex="5">
+                                    <padding>
+                                        <Insets left="10.0" />
+                                    </padding>
+                                </Label>
+                                <Label text="Date Hired" GridPane.rowIndex="3">
+                                    <padding>
+                                        <Insets left="10.0" />
+                                    </padding>
+                                </Label>
+                                <Label text="Hours Worked" GridPane.rowIndex="6">
+                                    <padding>
+                                        <Insets left="10.0" />
+                                    </padding>
+                                </Label>
+                                <Label text="Rate" GridPane.rowIndex="6">
+                                    <padding>
+                                        <Insets left="10.0" />
+                                    </padding>
+                                    <GridPane.margin>
+                                        <Insets left="170.0" />
+                                    </GridPane.margin>
+                                </Label>
+                                <RadioButton fx:id="CSRadioID" mnemonicParsing="false" text="CS" GridPane.rowIndex="2">
+                                    <padding>
+                                        <Insets left="5.0" />
+                                    </padding>
+                                    <toggleGroup>
+                                        <ToggleGroup fx:id="DeptType" />
+                                    </toggleGroup>
+                                </RadioButton>
+                                <RadioButton fx:id="ECERadioID" mnemonicParsing="false"  text="ECE" toggleGroup="$DeptType" GridPane.rowIndex="2">
+                                    <GridPane.margin>
+                                        <Insets left="200.0" />
+                                    </GridPane.margin>
+                                </RadioButton>
+                                <RadioButton fx:id="ITRadioID" mnemonicParsing="false" text="IT" toggleGroup="$DeptType" GridPane.rowIndex="2">
+                                    <GridPane.margin>
+                                        <Insets left="100.0" />
+                                    </GridPane.margin>
+                                </RadioButton>
+                                <Button fx:id="clearButtonID" mnemonicParsing="false" onAction="#clear" text="Clear" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                <Button fx:id="addButtonID" mnemonicParsing="false" onAction="#add" text="Add Employee" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                <Button fx:id="removeButtonID" mnemonicParsing="false" onAction="#remove" text="Remove Employee" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                <Button fx:id="setHoursButton" mnemonicParsing="false" onAction="#setHours" text="Set Hours" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                <TextField fx:id="hrsWorkedID" layoutX="180.0" layoutY="168.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="23.0" prefWidth="70.0" promptText="Enter Hours" GridPane.rowIndex="6">
+                                    <GridPane.margin>
+                                        <Insets left="100.0" />
+                                    </GridPane.margin>
+                                    <font>
+                                        <Font size="10.0" />
+                                    </font>
+                                </TextField>
+                                <TextField fx:id="rateFieldID" layoutX="180.0" layoutY="200.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="23.0" prefWidth="69.0" promptText="Enter Rate" GridPane.rowIndex="6">
+                                    <GridPane.margin>
+                                        <Insets left="220.0" />
+                                    </GridPane.margin>
+                                    <font>
+                                        <Font size="10.0" />
+                                    </font>
+                                </TextField>
+                                <RadioButton fx:id="managerRadioID" mnemonicParsing="false" onMouseClicked="#setManager" text="Manager" GridPane.rowIndex="7">
+                                    <padding>
+                                        <Insets left="5.0" />
+                                    </padding>
+                                    <toggleGroup>
+                                        <ToggleGroup fx:id="ManagerType" />
+                                    </toggleGroup>
+                                </RadioButton>
+                                <RadioButton fx:id="deptHeadRadioID" mnemonicParsing="false" onMouseClicked="#setDepartmentHead" text="Department Head" toggleGroup="$ManagerType" GridPane.rowIndex="7">
+                                    <GridPane.margin>
+                                        <Insets left="200.0" />
+                                    </GridPane.margin>
+                                </RadioButton>
+                                <RadioButton fx:id="directorRadioID" mnemonicParsing="false" onMouseClicked="#setDirector" text="Director" toggleGroup="$ManagerType" GridPane.rowIndex="7">
+                                    <GridPane.margin>
+                                        <Insets left="100.0" />
+                                    </GridPane.margin>
+                                </RadioButton>
+                        <Button mnemonicParsing="false" onAction="#calculate" prefHeight="25.0" prefWidth="136.0" text="Calculate All Payments" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                            </children>
+                            <padding>
+                                <Insets left="70.0" top="10.0" />
+                            </padding>
+                        </GridPane>
+                    </content>
+                </Tab>
+                <Tab text="Employee Database">
+                    <content>
+                        <GridPane prefHeight="227.0" prefWidth="600.0">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints />
+                                <RowConstraints maxHeight="79.79999389648438" minHeight="10.0" prefHeight="35.19998779296875" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="79.79999389648438" minHeight="4.799993896484374" prefHeight="41.60001220703125" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="166.40000610351564" minHeight="10.0" prefHeight="43.99998321533204" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="136.80001678466795" minHeight="10.0" prefHeight="136.80001678466795" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                            <children>
+                                <Button fx:id="printDeptID" mnemonicParsing="false" onAction="#printByDept" text="Print By Dept" GridPane.rowIndex="3">
+                                    <GridPane.margin>
+                                        <Insets left="220.0" />
+                                    </GridPane.margin>
+                                </Button>
+                                <Button fx:id="printDateID" mnemonicParsing="false" onAction="#printByDate" text="Print By Date" GridPane.rowIndex="3">
+                                    <GridPane.margin>
+                                        <Insets left="120.0" />
+                                    </GridPane.margin>
+                                </Button>
+                                <Button fx:id="printAllID" layoutX="230.0" layoutY="37.0" mnemonicParsing="false" onAction="#printAll" text="Print All Employees" GridPane.rowIndex="3">
+                                    <GridPane.margin>
+                                        <Insets left="320.0" />
+                                    </GridPane.margin>
+                                </Button>
+                                <MenuBar fx:id="menuBarDBID" prefHeight="26.0" prefWidth="146.0" GridPane.rowIndex="1">
+                                    <menus>
+                                        <Menu mnemonicParsing="false" text="File">
+                                            <items>
+                                                <MenuItem fx:id="importButtonID" mnemonicParsing="true" onAction="#importDB" text="Import" />
+                                                <MenuItem fx:id="exportButtonID" mnemonicParsing="true" onAction="#exportDB" text="Export" />
+                                            </items>
+                                        </Menu>
+                                    </menus>
+                                </MenuBar>
+                                <Label text="Please select one of the options." GridPane.rowIndex="2">
+                                    <GridPane.margin>
+                                        <Insets left="30.0" />
+                                    </GridPane.margin>
+                                </Label>
+                            </children>
+                        </GridPane>
+                    </content></Tab>
+            </tabs>
+        </TabPane>
+    </top>
+    <bottom>
+        <TextArea fx:id="TextAreaID" editable="false" prefHeight="126.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
+    </bottom>
+</BorderPane>
