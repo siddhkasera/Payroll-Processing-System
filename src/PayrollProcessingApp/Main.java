@@ -1,5 +1,4 @@
-package sample;
-
+package PayrollProcessingApp;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,9 +9,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("project1.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        Parent root = FXMLLoader.load(getClass().getResource("project.fxml"));
+        primaryStage.setTitle("Payroll Processing App");
+        primaryStage.setScene(new Scene(root, 600, 450));
         primaryStage.show();
     }
 
