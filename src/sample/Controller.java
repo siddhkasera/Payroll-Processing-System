@@ -139,48 +139,30 @@ public class Controller {
                     deptName = ECERadioID.getText(); //finding CSRadioButton label name and set that to deptname
                     addPartTimeEmployee(hourlyPay);
                 }
-            }
-
-             else if (managementRadioID.isSelected()) {
+            } else if (managementRadioID.isSelected()) {
 
                 annualSalary = Double.parseDouble(salaryFieldID.getText().toString());
 
-                 if (CSRadioID.isSelected()) {
+                if (CSRadioID.isSelected()) {
                     deptName = CSRadioID.getText(); //finding CSRadioButton label name and set that to deptname
-                     if (role != 0 || role != 1 || role != 3) {
-                         if (!TextAreaID.getText().isEmpty()) {
-                             str.append("\n");
-                         }
-                         str.append("Please check if you selected a role for manager.");
-                         TextAreaID.setText(str.toString());
-                         return;
-                     }
-                     addMngmntEmployee();
+                    if (role == 1 || role == 2 || role == 3) {
+                        addMngmntEmployee();
+                    }
 
                 } else if (ITRadioID.isSelected()) {
                     deptName = ITRadioID.getText();
-                     if (role != 0 || role != 1 || role != 3) {
-                         if (!TextAreaID.getText().isEmpty()) {
-                             str.append("\n");
-                         }
-                         str.append("Please check if you selected a role for manager.");
-                         TextAreaID.setText(str.toString());
-                         return;
-                     }
-                    addMngmntEmployee();
+                    if (role == 1 || role == 2 || role == 3) {
+                        addMngmntEmployee();
+                    }
 
-                } else if (ECERadioID.isSelected()) {
-                    deptName = ECERadioID.getText();
-                     if (role != 0 || role != 1 || role != 3) {
-                         if (!TextAreaID.getText().isEmpty()) {
-                             str.append("\n");
-                         }
-                         str.append("Please check if you selected a role for manager.");
-                         TextAreaID.setText(str.toString());
-                         return;
-                     }
+                }
+
+            } else if (ECERadioID.isSelected()) {
+                deptName = ECERadioID.getText();
+                if (role == 1 || role == 2 || role == 3) {
                     addMngmntEmployee();
                 }
+
             }
         } catch (NullPointerException e) {
             if (!TextAreaID.getText().isEmpty()) {
@@ -701,6 +683,7 @@ public class Controller {
     @FXML
     void setDepartmentHead(MouseEvent event) {
         role = DEPT_HEAD;
+
     }
 
     /**
@@ -711,6 +694,7 @@ public class Controller {
     @FXML
     void setDirector(MouseEvent event) {
         role = DIRECTOR;
+
     }
 
 
