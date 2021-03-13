@@ -104,6 +104,12 @@ public class Controller {
                 TextAreaID.setText(str.toString());
                 return;
             }
+            if (dateHiredStr.isEmpty()) {
+                str.append("Please check if all information is added.");
+                str.append("\n");
+                TextAreaID.setText(str.toString());
+                return;
+            }
             dateHiredStr = DateHiredID.getValue().toString(); //formatted in yyyy-mm-dd
             dateHiredStr = formatDate(dateHiredStr); //reformatting date to mm/dd/yyyy
 
